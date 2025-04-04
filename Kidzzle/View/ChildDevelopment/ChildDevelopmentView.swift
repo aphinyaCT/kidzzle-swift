@@ -62,7 +62,7 @@ struct ChildDevelopmentView: View {
                             imageName: "KIDZZLE-MASCOT",
                             backgroundColor: .softPink,
                             assessmentType: "ASSMTT_1",
-                            destination: AnyView(AssessmentTypeView(assessmentType: "ASSMTT_1", isPresented: $isPresented))
+                            destination: AnyView(EmptyView())
                             // AnyView(SurveillanceChildrenView())
                         )
                         
@@ -86,7 +86,7 @@ struct ChildDevelopmentView: View {
                             imageName: "KIDZZLE-MASCOT",
                             backgroundColor: .sunYellow,
                             assessmentType: "ASSMTT_2",
-                            destination: AnyView(AssessmentTypeView(assessmentType: "ASSMTT_2", isPresented: $isPresented))
+                            destination: AnyView(EmptyView())
                             //AnyView(SurveillanceChildrenView())
                         )
                         

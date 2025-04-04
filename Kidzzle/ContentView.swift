@@ -63,7 +63,7 @@ struct MainTabView: View {
         VStack(spacing: 0) {
             switch selectedTab {
             case 0:
-                EmptyView()
+                HistoryView()
             case 1:
                 PromotionView()
             case 2:

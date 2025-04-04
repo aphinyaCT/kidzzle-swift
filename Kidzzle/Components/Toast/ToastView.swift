@@ -15,17 +15,21 @@ struct ToastView: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: type.icon)
-                .foregroundColor(.white)
+                .foregroundColor(type.color)
             
             Text(message)
-                .font(customFont(type: .medium, textStyle: .subheadline))
-                .foregroundColor(.white)
+                .font(customFont(type: .medium, textStyle: .callout))
+                .foregroundColor(type.color)
             
             Spacer()
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .background(type.color)
+        .background(Color.white)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(type.color, lineWidth: 1)
+        )
         .cornerRadius(8)
         .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
         .padding(.horizontal, 16)

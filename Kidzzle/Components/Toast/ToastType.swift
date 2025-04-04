@@ -16,9 +16,9 @@ enum ToastType {
     
     var color: Color {
         switch self {
-        case .success: return Color.green
-        case .error: return Color.red
-        case .info: return Color.blue
+        case .success: return Color.greenMint
+        case .error: return Color.coralRed
+        case .info: return Color.deepBlue
         }
     }
     
@@ -37,9 +37,12 @@ enum ToastCase {
     case registerSuccess
     case loginError
     case registerError
-    case passwordResetRequestSuccess
-    case passwordChangeSuccess
-    case userNotFound
+    case requestResetPasswordSuccess
+    case requestResetPasswordError
+    case resetPasswordSuccess
+    case resetPasswordError
+    case logoutSuccess
+    case invalidCredentials
     
     var message: String {
         switch self {
@@ -50,21 +53,27 @@ enum ToastCase {
         case .registerSuccess:
             return "สมัครสมาชิกสำเร็จ"
         case .registerError:
-            return "อีเมลถูกใช้งานแล้วหรือรูปแบบอีเมลไม่ถูกต้อง"
-        case .passwordResetRequestSuccess:
+            return "อีเมลถูกใช้งานแล้ว"
+        case .requestResetPasswordSuccess:
             return "ส่งคำขอรีเซ็ตรหัสผ่านสำเร็จ"
-        case .passwordChangeSuccess:
+        case .requestResetPasswordError:
+            return "ส่งคำขอรีเซ็ตรหัสผ่านไม่สำเร็จ ลองอีกครั้ง"
+        case .resetPasswordSuccess:
             return "เปลี่ยนรหัสผ่านสำเร็จ ลองเข้าสู่ระบบอีกครั้ง"
-        case .userNotFound:
-            return "ไม่พบอีเมลนี้ในระบบ"
+        case .resetPasswordError:
+            return "เปลี่ยนรหัสผ่านไม่สำเร็จ ลองอีกครั้ง"
+        case .logoutSuccess:
+            return "ออกจากระบบสำเร็จ"
+        case .invalidCredentials:
+            return "รูปแบบอีเมลหรือรหัสผ่านไม่ถูกต้อง"
         }
     }
     
     var type: ToastType {
         switch self {
-        case .loginError, .userNotFound, .registerError:
+        case .loginError, .registerError, .invalidCredentials, .resetPasswordError, .requestResetPasswordError:
             return .error
-        case .loginSuccess, .registerSuccess, .passwordResetRequestSuccess, .passwordChangeSuccess:
+        case .loginSuccess, .registerSuccess, .logoutSuccess, .resetPasswordSuccess, .requestResetPasswordSuccess:
             return .success
         }
     }

@@ -16,8 +16,6 @@ struct SignUpView: View {
     @Environment(\.dismiss) private var dismiss
     
     @State private var showPrivacyPolicySheet = false
-    @State private var showRegisterSuccessToast = false
-    @State private var showRegisterErrorToast = false
     
     var body: some View {
         VStack (spacing: 0) {
@@ -70,7 +68,9 @@ struct SignUpView: View {
                 
                 // MARK: Sign UP Buttton
                 Button(action: {
-                    register()
+                    Task {
+                        await authViewModel.register(email: email, password: password)
+                    }
                 }, label: {
                     ZStack {
                         if authViewModel.isLoading {
@@ -114,39 +114,15 @@ struct SignUpView: View {
         .background(.ivorywhite)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea(.keyboard)
-        .toast(isShowing: $showRegisterSuccessToast, toastCase: .registerSuccess, duration: 3.0)
-        .toast(isShowing: $showRegisterErrorToast, toastCase: .registerError, duration: 3.0)
-    }
-    
-    // ลงทะเบียน
-    private func register() {
-        // ตรวจสอบความยาวรหัสผ่าน
-        guard password.count >= 8 else {
-            showRegisterErrorToast = true
-            return
-        }
-        
-        Task {
-            await authViewModel.register(email: email, password: password)
-            
-//            if result.success {
-//                showRegisterSuccessToast = true
-//                
-//                // รอสักครู่แล้วปิดหน้าต่าง
-//                if authViewModel.isAuthenticated {
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-//                        dismiss()
-//                    }
-//                } else {
-//                    // ถ้าลงทะเบียนสำเร็จแต่ล็อกอินไม่สำเร็จ ให้ปิดหน้าต่างเพื่อกลับไปที่หน้าล็อกอิน
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-//                        dismiss()
-//                    }
-//                }
-//            } else {
-//                // แสดง toast error สำหรับข้อผิดพลาดจาก API
-//                showRegisterErrorToast = true
-//            }
+        .toast(isShowing: $authViewModel.showRegisterSuccessToast, toastCase: .registerSuccess, duration: 1.5)
+        .toast(isShowing: $authViewModel.showRegisterErrorToast, toastCase: .registerError, duration: 1.5)
+        .toast(isShowing: $authViewModel.showInvalidCredentialsToast, toastCase: .invalidCredentials, duration: 1.5)
+        .onChange(of: authViewModel.showRegisterSuccessToast) { oldValue, newValue in
+            if newValue {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    dismiss()
+                }
+            }
         }
     }
 }

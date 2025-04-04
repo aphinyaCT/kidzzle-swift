@@ -17,11 +17,6 @@ struct ResetPasswordView: View {
     @State private var isEmailValid: Bool = false
     @State private var isPasswordValid: Bool = false
     
-    // เพิ่ม state สำหรับ Toast
-    @State private var showPasswordResetRequestToast = false
-    @State private var showPasswordChangeSuccessToast = false
-    @State private var showUserNotFoundToast = false
-    
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -67,10 +62,7 @@ struct ResetPasswordView: View {
                         value: $email
                     )
                     .onChange(of: email) { _, newValue in
-                        // ตรวจสอบความถูกต้องของอีเมลโดยดูจากสี border
-                        // สังเกตว่าเมื่อ email ถูกต้อง border จะเป็นสีเขียว
                         if !newValue.isEmpty {
-                            // ใช้ความยาวเป็นเกณฑ์ขั้นต่ำเพื่อป้องกันปุ่มถูกกดเมื่อข้อมูลไม่สมบูรณ์
                             let hasAtSymbol = newValue.contains("@")
                             let hasDotAfterAt = hasAtSymbol && newValue.split(separator: "@").count > 1 && newValue.split(separator: "@")[1].contains(".")
                             isEmailValid = hasAtSymbol && hasDotAfterAt && newValue.count >= 5
@@ -81,13 +73,10 @@ struct ResetPasswordView: View {
                     
                     Button(action: {
                         Task {
-                            await authViewModel.requestPasswordReset(email: email)
-//                            if result.success {
-//                                showPasswordResetRequestToast = true
-//                                step = 2
-//                            } else {
-//                                showUserNotFoundToast = true
-//                            }
+                            let result = await authViewModel.requestPasswordReset(email: email)
+                            if result.success {
+                                step = 2
+                            }
                         }
                     }, label: {
                         ZStack {
@@ -131,12 +120,9 @@ struct ResetPasswordView: View {
                         Task {
                             let result = await authViewModel.resetPassword(newPassword: password)
                             if result.success {
-                                showPasswordChangeSuccessToast = true
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                     dismiss()
                                 }
-                            } else {
-                                showUserNotFoundToast = true
                             }
                         }
                     }, label: {
@@ -168,9 +154,11 @@ struct ResetPasswordView: View {
         .background(.ivorywhite)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea(.keyboard)
-        .toast(isShowing: $showPasswordResetRequestToast, toastCase: .passwordResetRequestSuccess)
-        .toast(isShowing: $showPasswordChangeSuccessToast, toastCase: .passwordChangeSuccess)
-        .toast(isShowing: $showUserNotFoundToast, toastCase: .userNotFound)
+        .toast(isShowing: $authViewModel.showRequestResetPasswordSuccessToast, toastCase: .requestResetPasswordSuccess)
+        .toast(isShowing: $authViewModel.showRequestResetPasswordErrorToast, toastCase: .requestResetPasswordError)
+        .toast(isShowing: $authViewModel.showResetPasswordSuccessToast, toastCase: .resetPasswordSuccess)
+        .toast(isShowing: $authViewModel.showResetPasswordErrorToast, toastCase: .resetPasswordError)
+        .toast(isShowing: $authViewModel.showInvalidCredentialsToast, toastCase: .invalidCredentials)
     }
 }
 

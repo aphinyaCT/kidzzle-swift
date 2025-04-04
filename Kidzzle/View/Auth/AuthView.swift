@@ -6,12 +6,12 @@
 //
 
 import SwiftUI
-//import LineSDK
 import GoogleSignIn
 
 struct AuthView: View {
     
     @EnvironmentObject var authViewModel: AuthViewModel
+    
     // MARK: - Properties
     @State private var email: String = ""
     @State private var password: String = ""
@@ -25,9 +25,6 @@ struct AuthView: View {
     @State private var showRegistrationSheet = false
     @State private var showLoginSheet = false
     @State private var showResetPasswordSheet = false
-    
-    @State private var showLoginSuccessToast = false
-    @State private var showLoginErrorToast = false
     
     // MARK: - Body
     var body: some View {
@@ -80,9 +77,12 @@ struct AuthView: View {
                         
                         Button {
                             hideKeyboard()
+                            isSubmitting = true
                             Task {
-                                await authViewModel.login(email: email, password: password)
-                                isSubmitting = true
+                                let _ = await authViewModel.login(email: email, password: password)
+                                DispatchQueue.main.async {
+                                    isSubmitting = false
+                                }
                             }
                         } label: {
                             if isSubmitting || authViewModel.isLoading {
@@ -100,7 +100,6 @@ struct AuthView: View {
                         .cornerRadius(10)
                         .disabled(email.isEmpty || password.isEmpty)
                         
-                        // Or Divider
                         HStack {
                             Rectangle()
                                 .frame(height: 1)
@@ -166,8 +165,9 @@ struct AuthView: View {
                 .ignoresSafeArea(.keyboard)
             }
         }
-        .toast(isShowing: $showLoginSuccessToast, toastCase: .loginSuccess, duration: 3.0)
-        .toast(isShowing: $showLoginErrorToast, toastCase: .loginError, duration: 3.0)
+        .toast(isShowing: $authViewModel.showLoginErrorToast, toastCase: .loginError, duration: 1.5)
+        .toast(isShowing: $authViewModel.showInvalidCredentialsToast , toastCase: .invalidCredentials, duration: 1.5)
+        .toast(isShowing: $authViewModel.showLogoutSuccessToast, toastCase: .logoutSuccess, duration: 1.5)
         .contentShape(Rectangle())
         .onTapGesture {
             hideKeyboard()
@@ -182,13 +182,24 @@ struct AuthView: View {
                 .environmentObject(authViewModel)
                 .interactiveDismissDisabled()
         }
+        .onChange(of: authViewModel.isAuthenticated) { oldValue, newValue in
+            if newValue {
+                UserDefaults.standard.set(true, forKey: "just_logged_in")
+                isLoggedIn = true
+                isSubmitting = false
+            }
+        }
+        .onChange(of: authViewModel.errorMessage) { oldValue, newValue in
+            if newValue != nil {
+                isSubmitting = false
+            }
+        }
     }
     
     private func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
     
-    // MARK: - Computed Properties
     private var isFormValid: Bool {
         !email.isEmpty && email.contains("@") && email.contains(".")
     }

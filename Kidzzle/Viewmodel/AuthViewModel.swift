@@ -20,10 +20,38 @@ class AuthViewModel: ObservableObject {
     @Published var userId: String?
     @Published var resetToken: String?
     
+    // MARK: Login Toast
+    @Published var showLoginSuccessToast = false
+    @Published var showLoginErrorToast = false
+    
+    // MARK: Register Toast
+    @Published var showRegisterSuccessToast = false
+    @Published var showRegisterErrorToast = false
+    
+    // MARK: Social Login Toast
+    @Published var showSocialLoginSuccessToast = false
+    @Published var showSocialLoginErrorToast = false
+    
+    // MARK: Request Reset Password Toast
+    @Published var showRequestResetPasswordSuccessToast = false
+    @Published var showRequestResetPasswordErrorToast = false
+    
+    // MARK: Reset Password Toast
+    @Published var showResetPasswordSuccessToast = false
+    @Published var showResetPasswordErrorToast = false
+    
+    // MARK: Invalid Email & Password Toast
+    @Published var showInvalidCredentialsToast = false
+    
+    // MARK: Logout Toast
+    @Published var showLogoutSuccessToast = false
+    
     init() {
+        // โหลดข้อมูลที่บันทึกไว้เมื่อเริ่มต้น
         loadSavedUserData()
     }
     
+    // เก็บข้อมูลการล็อกอิน
     func saveAuthData(token: String) {
         UserDefaults.standard.set(token, forKey: "auth_token")
         
@@ -34,6 +62,7 @@ class AuthViewModel: ObservableObject {
         }
     }
 
+    // โหลดข้อมูลผู้ใช้ที่บันทึกไว้
     private func loadSavedUserData() {
         if let token = UserDefaults.standard.string(forKey: "auth_token") {
             self.token = token
@@ -41,11 +70,43 @@ class AuthViewModel: ObservableObject {
         }
     }
     
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegex = "^(?=[A-Z0-9a-z._%+-]{1,64}@)(?!.*[-]{2,})[A-Z0-9a-z]([A-Z0-9a-z._%+-]*[A-Z0-9a-z])?@[A-Za-z0-9]([A-Za-z0-9.-]*[A-Za-z0-9])?\\.[A-Za-z]{2,64}$"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        return emailPredicate.evaluate(with: email)
+    }
+    
+    func isStrongPassword(_ password: String) -> Bool {
+        // ตรวจสอบความยาวขั้นต่ำ
+        guard password.count >= 8 else { return false }
+        
+        // ตรวจสอบว่ามีตัวพิมพ์ใหญ่อย่างน้อย 1 ตัว
+        let uppercaseLetterRegex = ".*[A-Z]+.*"
+        if !NSPredicate(format: "SELF MATCHES %@", uppercaseLetterRegex).evaluate(with: password) {
+            return false
+        }
+        
+        // ตรวจสอบว่ามีตัวพิมพ์เล็กอย่างน้อย 1 ตัว
+        let lowercaseLetterRegex = ".*[a-z]+.*"
+        if !NSPredicate(format: "SELF MATCHES %@", lowercaseLetterRegex).evaluate(with: password) {
+            return false
+        }
+        
+        // ตรวจสอบว่ามีตัวเลขอย่างน้อย 1 ตัว
+        let digitRegex = ".*[0-9]+.*"
+        if !NSPredicate(format: "SELF MATCHES %@", digitRegex).evaluate(with: password) {
+            return false
+        }
+        
+        return true
+    }
+    
     @MainActor
     func register(email: String, password: String) async -> (success: Bool, message: String) {
-        if password.count < 8 {
-            self.errorMessage = "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร"
-            return (false, "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร")
+        if !isValidEmail(email) || !isStrongPassword(password) {
+            self.errorMessage = "รูปแบบอีเมลหรือรหัสผ่านไม่ถูกต้อง"
+            self.showInvalidCredentialsToast = true
+            return (false, "ข้อมูลไม่ถูกต้อง")
         }
         
         self.isLoading = true
@@ -60,10 +121,11 @@ class AuthViewModel: ObservableObject {
             self.isLoading = false
             
             if response.code == 200 {
-                // ลงทะเบียนสำเร็จ
+                self.showRegisterSuccessToast = true
                 return (true, response.message ?? "ลงทะเบียนสำเร็จ")
             } else {
                 self.errorMessage = response.message
+                self.showRegisterErrorToast = true
                 return (false, response.message ?? "การลงทะเบียนล้มเหลว")
             }
         } catch let error as AuthError {
@@ -72,24 +134,28 @@ class AuthViewModel: ObservableObject {
             switch error {
             case .serverError(let message):
                 self.errorMessage = message
+                self.showRegisterErrorToast = true
                 return (false, message)
             default:
                 self.errorMessage = error.localizedDescription
+                self.showRegisterErrorToast = true
                 return (false, error.localizedDescription)
             }
         } catch {
             self.isLoading = false
             handleError(error)
+            self.showRegisterErrorToast = true
             return (false, self.errorMessage ?? "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ")
         }
     }
     
-    // ล็อกอิน
+    
     @MainActor
     func login(email: String, password: String) async -> (success: Bool, message: String) {
-        if password.count < 8 {
-            self.errorMessage = "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร"
-            return (false, "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร")
+        if !isValidEmail(email) || !isStrongPassword(password) {
+            self.errorMessage = "รูปแบบอีเมลหรือรหัสผ่านไม่ถูกต้อง"
+            self.showInvalidCredentialsToast = true
+            return (false, "ข้อมูลไม่ถูกต้อง")
         }
         
         self.isLoading = true
@@ -106,15 +172,18 @@ class AuthViewModel: ObservableObject {
             if response.code == 200 {
                 guard let accessToken = response.access_token else {
                     self.errorMessage = "ไม่ได้รับ access token จากเซิร์ฟเวอร์"
+                    self.showLoginErrorToast = true // เพิ่มบรรทัดนี้
                     return (false, "ไม่ได้รับ access token จากเซิร์ฟเวอร์")
                 }
                 
                 // บันทึกข้อมูล
                 saveAuthData(token: accessToken)
                 
+                self.showLoginSuccessToast = true // เพิ่มบรรทัดนี้
                 return (true, response.message ?? "เข้าสู่ระบบสำเร็จ")
             } else {
                 self.errorMessage = response.message
+                self.showLoginErrorToast = true // เพิ่มบรรทัดนี้
                 return (false, response.message ?? "การเข้าสู่ระบบล้มเหลว")
             }
         } catch let error as AuthError {
@@ -123,19 +192,21 @@ class AuthViewModel: ObservableObject {
             switch error {
             case .serverError(let message):
                 self.errorMessage = message
+                self.showLoginErrorToast = true // เพิ่มบรรทัดนี้
                 return (false, message)
             default:
                 self.errorMessage = error.localizedDescription
+                self.showLoginErrorToast = true // เพิ่มบรรทัดนี้
                 return (false, error.localizedDescription)
             }
         } catch {
             self.isLoading = false
             handleError(error)
+            self.showLoginErrorToast = true // เพิ่มบรรทัดนี้
             return (false, self.errorMessage ?? "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ")
         }
     }
 
-    // สำหรับ Social Login
     @MainActor
     func socialLogin(email: String, method: String, token: String) async -> (success: Bool, message: String) {
         self.isLoading = true
@@ -149,15 +220,17 @@ class AuthViewModel: ObservableObject {
             if response.code == 200 {
                 guard let accessToken = response.access_token else {
                     self.errorMessage = "ไม่ได้รับ access token จากเซิร์ฟเวอร์"
+                    self.showSocialLoginErrorToast = true  // เพิ่มบรรทัดนี้
                     return (false, "ไม่ได้รับ access token จากเซิร์ฟเวอร์")
                 }
                 
                 // บันทึกข้อมูล
                 saveAuthData(token: accessToken)
-                
+                self.showSocialLoginSuccessToast = true
                 return (true, response.message)
             } else {
                 self.errorMessage = response.message
+                self.showSocialLoginErrorToast = true
                 return (false, response.message)
             }
         } catch let error as AuthError {
@@ -166,14 +239,17 @@ class AuthViewModel: ObservableObject {
             switch error {
             case .serverError(let message):
                 self.errorMessage = message
+                self.showSocialLoginErrorToast = true
                 return (false, message)
             default:
                 self.errorMessage = error.localizedDescription
+                self.showSocialLoginErrorToast = true
                 return (false, error.localizedDescription)
             }
         } catch {
             self.isLoading = false
             handleError(error)
+            self.showSocialLoginErrorToast = true
             return (false, self.errorMessage ?? "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ")
         }
     }
@@ -185,12 +261,14 @@ class AuthViewModel: ObservableObject {
                 Task { @MainActor in
                     if let error = error {
                         self?.handleLoginError(error: error, method: "Google")
+                        self?.showSocialLoginErrorToast = true // เพิ่มบรรทัดนี้
                         continuation.resume(returning: (false, "Google login error: \(error.localizedDescription)"))
                         return
                     }
                     
                     guard let user = result?.user else {
                         self?.handleLoginError(error: NSError(domain: "LoginError", code: -1, userInfo: [NSLocalizedDescriptionKey: "No user found"]), method: "Google")
+                        self?.showSocialLoginErrorToast = true // เพิ่มบรรทัดนี้
                         continuation.resume(returning: (false, "ไม่พบข้อมูลผู้ใช้จาก Google"))
                         return
                     }
@@ -203,14 +281,14 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
-    
-    // จัดการการล็อกอินด้วย Google
+
     private func handleGoogleLogin(user: GIDGoogleUser) async -> (success: Bool, message: String) {
         let accessToken = user.accessToken.tokenString
         print("✅ Google Access Token: \(accessToken)")
         
         guard let idToken = user.idToken?.tokenString else {
             handleLoginError(error: NSError(domain: "LoginError", code: -1, userInfo: [NSLocalizedDescriptionKey: "ID Token is missing"]), method: "Google")
+            self.showSocialLoginErrorToast = true // เพิ่มบรรทัดนี้
             return (false, "ไม่พบ ID Token จาก Google")
         }
         
@@ -222,7 +300,6 @@ class AuthViewModel: ObservableObject {
         // ส่งข้อมูลไปยัง API
         return await socialLogin(email: email, method: "google", token: idToken)
     }
-    
     
     func handleLoginError(error: Error, method: String) {
         DispatchQueue.main.async {
@@ -241,6 +318,8 @@ class AuthViewModel: ObservableObject {
         resetToken = nil
         
         UserDefaults.standard.removeObject(forKey: "auth_token")
+        
+        self.showLogoutSuccessToast = true
     }
     
     private func handleError(_ error: Error) {
@@ -272,6 +351,13 @@ class AuthViewModel: ObservableObject {
             return (false, "กรุณากรอกอีเมล")
         }
         
+        // ตรวจสอบรูปแบบอีเมล
+        if !isValidEmail(email) {
+            self.errorMessage = "รูปแบบอีเมลไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง"
+            self.showInvalidCredentialsToast = true
+            return (false, "รูปแบบอีเมลไม่ถูกต้อง")
+        }
+        
         self.isLoading = true
         self.errorMessage = nil
         
@@ -283,10 +369,14 @@ class AuthViewModel: ObservableObject {
             if response.code == 200 {
                 self.resetToken = response.token
                 print("รีเซ็ตรหัสผ่านสำเร็จ สามารถตั้งรหัสผ่านใหม่ได้ทันที")
+                // เพิ่ม toast สำเร็จ
+                self.showRequestResetPasswordSuccessToast = true
                 return (true, "ส่งคำขอรีเซ็ตรหัสผ่านสำเร็จ กรุณาตรวจสอบอีเมล")
             } else {
                 let errorMessage = "ไม่สามารถส่งคำขอรีเซ็ตรหัสผ่านได้ กรุณาลองใหม่อีกครั้ง"
                 self.errorMessage = errorMessage
+                // เพิ่ม toast ผิดพลาด
+                self.showRequestResetPasswordErrorToast = true
                 return (false, errorMessage)
             }
         } catch let error as AuthError {
@@ -296,14 +386,17 @@ class AuthViewModel: ObservableObject {
             case .serverError:
                 let errorMessage = "เกิดข้อผิดพลาดที่เซิร์ฟเวอร์ กรุณาลองใหม่อีกครั้ง"
                 self.errorMessage = errorMessage
+                self.showRequestResetPasswordErrorToast = true
                 return (false, errorMessage)
             case .networkError:
                 let errorMessage = "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต"
                 self.errorMessage = errorMessage
+                self.showRequestResetPasswordErrorToast = true
                 return (false, errorMessage)
             case .invalidURL, .invalidResponse, .decodingError:
                 let errorMessage = "เกิดข้อผิดพลาดในการประมวลผล กรุณาลองใหม่อีกครั้ง"
                 self.errorMessage = errorMessage
+                self.showRequestResetPasswordErrorToast = true
                 return (false, errorMessage)
             }
         } catch {
@@ -311,6 +404,7 @@ class AuthViewModel: ObservableObject {
             
             let errorMessage = "เกิดข้อผิดพลาดที่ไม่คาดคิด กรุณาลองใหม่อีกครั้ง"
             self.errorMessage = errorMessage
+            self.showRequestResetPasswordErrorToast = true
             return (false, errorMessage)
         }
     }
@@ -320,12 +414,15 @@ class AuthViewModel: ObservableObject {
     func resetPassword(newPassword: String) async -> (success: Bool, message: String) {
         guard let token = self.resetToken else {
             self.errorMessage = "ไม่พบโทเค็นสำหรับรีเซ็ตรหัสผ่าน กรุณาส่งคำขอรีเซ็ตใหม่"
+            self.showResetPasswordErrorToast = true
             return (false, "ไม่พบโทเค็นสำหรับรีเซ็ตรหัสผ่าน กรุณาส่งคำขอรีเซ็ตใหม่")
         }
         
-        if newPassword.count < 8 {
-            self.errorMessage = "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร"
-            return (false, "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร")
+        // ตรวจสอบความแข็งแรงของรหัสผ่าน
+        if !isStrongPassword(newPassword) {
+            self.errorMessage = "รหัสผ่านต้องมี 8 ตัวอักษรเท่านั้น ประกอบด้วยตัวพิมพ์ใหญ่ ตัวพิมพ์เล็ก และตัวเลข"
+            self.showInvalidCredentialsToast = true
+            return (false, "รหัสผ่านไม่ตรงตามเงื่อนไข")
         }
         
         self.isLoading = true
@@ -339,10 +436,14 @@ class AuthViewModel: ObservableObject {
             if response.code == 200 {
                 print("รีเซ็ตรหัสผ่านสำเร็จ: \(response.message)")
                 self.resetToken = nil
+                // เพิ่ม toast สำเร็จ
+                self.showResetPasswordSuccessToast = true
                 return (true, "รีเซ็ตรหัสผ่านสำเร็จ")
             } else {
                 let errorMessage = "ไม่สามารถรีเซ็ตรหัสผ่านได้ กรุณาลองใหม่อีกครั้ง"
                 self.errorMessage = errorMessage
+                // เพิ่ม toast ผิดพลาด
+                self.showResetPasswordErrorToast = true
                 return (false, errorMessage)
             }
         } catch let error as AuthError {
@@ -351,16 +452,19 @@ class AuthViewModel: ObservableObject {
             switch error {
             case .serverError(let message):
                 self.errorMessage = message
+                self.showResetPasswordErrorToast = true
                 return (false, message)
             default:
                 let errorMessage = "เกิดข้อผิดพลาดในการรีเซ็ตรหัสผ่าน"
                 self.errorMessage = errorMessage
+                self.showResetPasswordErrorToast = true
                 return (false, errorMessage)
             }
         } catch {
             self.isLoading = false
             let errorMessage = "เกิดข้อผิดพลาดที่ไม่คาดคิด"
             self.errorMessage = errorMessage
+            self.showResetPasswordErrorToast = true
             return (false, errorMessage)
         }
     }
