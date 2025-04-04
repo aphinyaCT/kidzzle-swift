@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.807625438905-i85i6d9af4ifv6qhe03vuqmae5neoa2t</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>line3rdp.aynnipa.Kidzzle</string>
+			</array>
+		</dict>
+	</array>
+	<key>GIDClientID</key>
+	<string>807625438905-i85i6d9af4ifv6qhe03vuqmae5neoa2t.apps.googleusercontent.com</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>line3rdp.com.aynnipa.Kidzzle</string>
+		<string>lineauth2</string>
+		<string>http</string>
+		<string>https</string>
+	</array>
+	<key>LineSDKConfig</key>
+	<dict>
+		<key>ChannelID</key>
+		<string>2007080549</string>
+	</dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>NotoSansThai-Bold.ttf</string>
+		<string>NotoSansThai-Medium.ttf</string>
+		<string>NotoSansThai-Regular.ttf</string>
+		<string>NotoSansThai-Light.ttf</string>
+		<string>NotoSansThai-SemiBold.ttf</string>
+	</array>
+</dict>
+</plist>

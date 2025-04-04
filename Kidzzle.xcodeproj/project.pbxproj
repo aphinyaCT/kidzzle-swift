@@ -6,13 +6,33 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2F4615962DA031BA00798982 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 2F4615952DA031BA00798982 /* GoogleSignIn */; };
+		2F4615982DA031BA00798982 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2F4615972DA031BA00798982 /* GoogleSignInSwift */; };
+		2F46159B2DA031D500798982 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2F46159A2DA031D500798982 /* SDWebImageSwiftUI */; };
+		2F46159E2DA0320600798982 /* ScalingHeaderScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = 2F46159D2DA0320600798982 /* ScalingHeaderScrollView */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		2F4615862DA0304400798982 /* Kidzzle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kidzzle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2F4615A02DA0325600798982 /* Exceptions for "Kidzzle" folder in "Kidzzle" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 2F4615852DA0304400798982 /* Kidzzle */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2F4615882DA0304400798982 /* Kidzzle */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2F4615A02DA0325600798982 /* Exceptions for "Kidzzle" folder in "Kidzzle" target */,
+			);
 			path = Kidzzle;
 			sourceTree = "<group>";
 		};
@@ -23,6 +43,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F46159B2DA031D500798982 /* SDWebImageSwiftUI in Frameworks */,
+				2F4615962DA031BA00798982 /* GoogleSignIn in Frameworks */,
+				2F4615982DA031BA00798982 /* GoogleSignInSwift in Frameworks */,
+				2F46159E2DA0320600798982 /* ScalingHeaderScrollView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +89,10 @@
 			);
 			name = Kidzzle;
 			packageProductDependencies = (
+				2F4615952DA031BA00798982 /* GoogleSignIn */,
+				2F4615972DA031BA00798982 /* GoogleSignInSwift */,
+				2F46159A2DA031D500798982 /* SDWebImageSwiftUI */,
+				2F46159D2DA0320600798982 /* ScalingHeaderScrollView */,
 			);
 			productName = Kidzzle;
 			productReference = 2F4615862DA0304400798982 /* Kidzzle.app */;
@@ -94,6 +122,11 @@
 			);
 			mainGroup = 2F46157D2DA0304400798982;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2F4615942DA031B900798982 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				2F4615992DA031D500798982 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				2F46159C2DA0320600798982 /* XCRemoteSwiftPackageReference "ScalingHeaderScrollView" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2F4615872DA0304400798982 /* Products */;
 			projectDirPath = "";
@@ -178,7 +211,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -236,7 +269,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -256,11 +289,16 @@
 				DEVELOPMENT_TEAM = 22Q9CQT643;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Kidzzle/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Kidzzle;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "เราต้องใช้ไมโครโฟนเพื่อใช้ในการฝึกทักษะของเด็ก";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "เราต้องใช้การรู้จำเสียงพูดเพื่อใช้ในการฝึกทักษะของเด็ก";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -268,9 +306,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = aynnipa.Kidzzle;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -284,11 +326,16 @@
 				DEVELOPMENT_TEAM = 22Q9CQT643;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Kidzzle/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Kidzzle;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "เราต้องใช้ไมโครโฟนเพื่อใช้ในการฝึกทักษะของเด็ก";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "เราต้องใช้การรู้จำเสียงพูดเพื่อใช้ในการฝึกทักษะของเด็ก";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -296,9 +343,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = aynnipa.Kidzzle;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -324,6 +375,56 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2F4615942DA031B900798982 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+		2F4615992DA031D500798982 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.3;
+			};
+		};
+		2F46159C2DA0320600798982 /* XCRemoteSwiftPackageReference "ScalingHeaderScrollView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/ScalingHeaderScrollView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.7;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2F4615952DA031BA00798982 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2F4615942DA031B900798982 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		2F4615972DA031BA00798982 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2F4615942DA031B900798982 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+		2F46159A2DA031D500798982 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2F4615992DA031D500798982 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
+		2F46159D2DA0320600798982 /* ScalingHeaderScrollView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2F46159C2DA0320600798982 /* XCRemoteSwiftPackageReference "ScalingHeaderScrollView" */;
+			productName = ScalingHeaderScrollView;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2F46157E2DA0304400798982 /* Project object */;
 }
