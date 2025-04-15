@@ -98,8 +98,6 @@ struct MainTabView: View {
             Task {
                 await motherViewModel.fetchMotherPregnant()
                 
-                print("Mother Pregnant List Count After Fetch: \(motherViewModel.motherPregnantDataList.count)")
-                
                 if !motherViewModel.motherPregnantDataList.isEmpty {
                     selectedTab = 2
                 }

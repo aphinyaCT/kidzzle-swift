@@ -72,8 +72,15 @@ struct KidzzleApp: App {
 }
 
 struct SplashScreenView: View {
-    @State private var size = 0.8
-    @State private var opacity = 0.5
+    @State private var size = 1.0
+    @State private var opacity = 0.8
+    @State private var animationCount = 0
+    @State private var isAnimating = false
+    
+    private let beatDuration: Double = 0.5
+    private let restDuration: Double = 0.3
+    private let delayBetweenBeats: Double = 0.1
+    private let totalBeats = 4
     
     var body: some View {
         ZStack {
@@ -87,18 +94,56 @@ struct SplashScreenView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 250, height: 250)
+                    .scaleEffect(size)
+                    .opacity(opacity)
+                    .onAppear {
+                        startSmoothHeartbeatAnimation()
+                    }
                 
                 Spacer()
             }
-            .scaleEffect(size)
-            .opacity(opacity)
-            .onAppear {
-                withAnimation(.easeIn(duration: 1.2)) {
-                    self.size = 1.0
-                    self.opacity = 1.0
+        }
+    }
+    
+    func startSmoothHeartbeatAnimation() {
+        guard !isAnimating else { return }
+        isAnimating = true
+        
+        animateHeartbeat(beatIndex: 0)
+    }
+    
+    func animateHeartbeat(beatIndex: Int) {
+        guard beatIndex < totalBeats else {
+            withAnimation(.easeInOut(duration: 0.8)) {
+                size = 1.0
+                opacity = 1.0
+            }
+
+            isAnimating = false
+            return
+        }
+        
+        withAnimation(.easeIn(duration: beatDuration * 0.4).delay(delayBetweenBeats)) {
+            size = 1.15
+            opacity = 0.9
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + beatDuration * 0.4 + delayBetweenBeats) {
+            withAnimation(.easeOut(duration: beatDuration * 0.6)) {
+                size = 0.98
+                opacity = 0.8
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + beatDuration * 0.6) {
+                withAnimation(.easeInOut(duration: restDuration)) {
+                    size = 1.0
+                    opacity = 0.85
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + restDuration + (beatIndex < totalBeats - 1 ? 0.2 : 0)) {
+                    animateHeartbeat(beatIndex: beatIndex + 1)
                 }
             }
         }
     }
 }
-

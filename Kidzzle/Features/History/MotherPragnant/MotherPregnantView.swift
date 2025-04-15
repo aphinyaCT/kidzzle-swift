@@ -90,8 +90,6 @@ struct MotherPregnantView: View {
                                 .cornerRadius(10)
                         }
                         .disabled({
-                            print("📌 motherName = \(viewModel.motherName)")
-                            print("📌 isLoading = \(viewModel.isLoading)")
                             return viewModel.isLoading || viewModel.motherName.isEmpty
                         }())
 

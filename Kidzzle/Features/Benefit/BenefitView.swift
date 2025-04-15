@@ -187,7 +187,7 @@ struct MSDHSBenefitView: View {
             )
             
             ServiceButtonView(
-                title: "ระบบตรวจสอบสิทธิเงินอุดหนุน\nเพื่อการเลี้ยงดูเด็กแรกเกิด",
+                title: "ระบบตรวจสอบสิทธิเงินอุดหนุนเด็กแรกเกิด",
                 imageName: "stamp",
                 backgroundColor: .greenMint,
                 urlString: viewModel.urls.subsidyCheck,

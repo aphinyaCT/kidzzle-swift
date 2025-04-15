@@ -92,7 +92,7 @@ struct CustomQuestionsListView: View {
                     isLoading = false
                 }
             }
-            .toast(isShowing: $showAssessmentToast, toastCase: .assessmentSuccess, duration: 1.5)
+            .toast(isShowing: $showAssessmentToast, toastCase: .assessmentSuccess, duration: 0.8)
         }
     }
     
