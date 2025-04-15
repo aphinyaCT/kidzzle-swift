@@ -1,32 +1,30 @@
-////
-////  ContentView.swift
-////  Kidzzle
-////
-////  Created by aynnipa on 4/4/2568 BE.
-////
 //
-//import SwiftUI
+//  ContentView.swift
+//  Kidzzle
 //
-//struct ContentView: View {
-//    var body: some View {
-//        VStack {
-//            Image(systemName: "globe")
-//                .imageScale(.large)
-//                .foregroundStyle(.tint)
-//            Text("Hello, world!")
-//        }
-//        .padding()
-//    }
-//}
+//  Created by aynnipa on 4/4/2568 BE.
 //
-//#Preview {
-//    ContentView()
-//}
 
 import SwiftUI
 
 struct ContentView: View {
     @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var motherViewModel: MotherPregnantViewModel
+    @StateObject private var kidViewModel: KidHistoryViewModel
+
+    init() {
+        let authVM = AuthViewModel()
+        let motherVM = MotherPregnantViewModel(authViewModel: authVM)
+        let kidVM = KidHistoryViewModel(
+            authViewModel: authVM,
+            motherViewModel: motherVM
+        )
+        
+        _authViewModel = StateObject(wrappedValue: authVM)
+        _motherViewModel = StateObject(wrappedValue: motherVM)
+        _kidViewModel = StateObject(wrappedValue: kidVM)
+    }
+    
     @State private var isLoggedIn = false
     @State private var showChildDevelopment = false
     @State private var showForgotPassword = false
@@ -35,8 +33,12 @@ struct ContentView: View {
     var body: some View {
         Group {
             if isLoggedIn {
-                MainTabView()
-                    .environmentObject(authViewModel)
+                MainTabView(
+                    isLoggedIn: $isLoggedIn,
+                    motherViewModel: motherViewModel,
+                    kidViewModel: kidViewModel
+                )
+                .environmentObject(authViewModel)
             } else {
                 AuthView(
                     isLoggedIn: $isLoggedIn,
@@ -48,37 +50,60 @@ struct ContentView: View {
             }
         }
         .onAppear {
+            authViewModel.checkAuthStatus()
             isLoggedIn = authViewModel.isAuthenticated
         }
-        .onChange(of: authViewModel.isAuthenticated) {
-            isLoggedIn = authViewModel.isAuthenticated
+        .onChange(of: authViewModel.isAuthenticated) { _, newValue in
+            isLoggedIn = newValue
         }
+        .toast(isShowing: $authViewModel.showTokenExpiredToast, toastCase: .tokenExpired, duration: 2.0)
     }
 }
 
 struct MainTabView: View {
     @State private var selectedTab: Int = 0
+    @Binding var isLoggedIn: Bool
     
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @ObservedObject var motherViewModel: MotherPregnantViewModel
+    @ObservedObject var kidViewModel: KidHistoryViewModel
+
     var body: some View {
         VStack(spacing: 0) {
             switch selectedTab {
             case 0:
                 HistoryView()
+                    .environmentObject(authViewModel)
             case 1:
                 PromotionView()
             case 2:
-                ChildDevelopmentView()
+                ChildDevelopmentMainView(
+                    authViewModel: authViewModel,
+                    motherViewModel: motherViewModel,
+                    kidViewModel: kidViewModel
+                )
             case 3:
                 BenefitView()
             case 4:
                 InformationView()
             default:
-                EmptyView()
+                EmptyView(message: "404 Error")
             }
             
             Spacer()
             
             CustomTabBarView(selectedIndex: $selectedTab)
+        }
+        .onAppear {
+            Task {
+                await motherViewModel.fetchMotherPregnant()
+                
+                print("Mother Pregnant List Count After Fetch: \(motherViewModel.motherPregnantDataList.count)")
+                
+                if !motherViewModel.motherPregnantDataList.isEmpty {
+                    selectedTab = 2
+                }
+            }
         }
     }
 }
@@ -86,4 +111,3 @@ struct MainTabView: View {
 #Preview {
     ContentView()
 }
-

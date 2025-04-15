@@ -43,6 +43,8 @@ enum ToastCase {
     case resetPasswordError
     case logoutSuccess
     case invalidCredentials
+    case tokenExpired
+    case assessmentSuccess
     
     var message: String {
         switch self {
@@ -66,14 +68,18 @@ enum ToastCase {
             return "ออกจากระบบสำเร็จ"
         case .invalidCredentials:
             return "รูปแบบอีเมลหรือรหัสผ่านไม่ถูกต้อง"
+        case .tokenExpired:
+            return "เซสชั่นหมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง"
+        case .assessmentSuccess:
+            return "บันทึกการประเมินเสร็จสิ้น"
         }
     }
     
     var type: ToastType {
         switch self {
-        case .loginError, .registerError, .invalidCredentials, .resetPasswordError, .requestResetPasswordError:
+        case .loginError, .registerError, .invalidCredentials, .resetPasswordError, .requestResetPasswordError, .tokenExpired:
             return .error
-        case .loginSuccess, .registerSuccess, .logoutSuccess, .resetPasswordSuccess, .requestResetPasswordSuccess:
+        case .loginSuccess, .registerSuccess, .logoutSuccess, .resetPasswordSuccess, .requestResetPasswordSuccess, .assessmentSuccess:
             return .success
         }
     }

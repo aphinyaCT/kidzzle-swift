@@ -14,6 +14,16 @@
       "filename" : "stamp 5.png",
       "idiom" : "iphone",
       "scale" : "3x"
+    },
+    {
+      "filename" : "stamp 6.png",
+      "idiom" : "ipad",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "stamp 7.png",
+      "idiom" : "ipad",
+      "scale" : "2x"
     }
   ],
   "info" : {

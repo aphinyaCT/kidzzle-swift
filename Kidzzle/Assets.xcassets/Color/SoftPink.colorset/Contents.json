@@ -11,6 +11,18 @@
         }
       },
       "idiom" : "iphone"
+    },
+    {
+      "color" : {
+        "color-space" : "srgb",
+        "components" : {
+          "alpha" : "1.000",
+          "blue" : "0.886",
+          "green" : "0.573",
+          "red" : "0.961"
+        }
+      },
+      "idiom" : "ipad"
     }
   ],
   "info" : {

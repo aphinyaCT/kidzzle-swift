@@ -14,6 +14,16 @@
       "filename" : "KIDZZLE-MASCOT 5.png",
       "idiom" : "iphone",
       "scale" : "3x"
+    },
+    {
+      "filename" : "KIDZZLE-MASCOT 6.png",
+      "idiom" : "ipad",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "KIDZZLE-MASCOT 7.png",
+      "idiom" : "ipad",
+      "scale" : "2x"
     }
   ],
   "info" : {
