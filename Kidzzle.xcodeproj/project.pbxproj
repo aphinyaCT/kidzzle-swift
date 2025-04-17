@@ -286,6 +286,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 22Q9CQT643;
@@ -293,6 +294,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Kidzzle/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Kidzzle;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "เราต้องใช้ไมโครโฟนเพื่อใช้ในการฝึกทักษะของเด็ก";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "เราต้องใช้การรู้จำเสียงพูดเพื่อใช้ในการฝึกทักษะของเด็ก";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -323,6 +325,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 22Q9CQT643;
@@ -330,6 +333,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Kidzzle/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Kidzzle;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "เราต้องใช้ไมโครโฟนเพื่อใช้ในการฝึกทักษะของเด็ก";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "เราต้องใช้การรู้จำเสียงพูดเพื่อใช้ในการฝึกทักษะของเด็ก";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
