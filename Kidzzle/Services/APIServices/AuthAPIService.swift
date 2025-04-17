@@ -6,8 +6,6 @@
 //
 
 import Foundation
-//import GoogleSignIn
-//import LineSDK
 
 class AuthAPIService {
     private let baseURL = "https://kidzzle-api-807625438905.asia-southeast1.run.app/api/v1"

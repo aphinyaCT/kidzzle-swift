@@ -285,7 +285,7 @@ struct ShowMotherPregnantView: View {
                                             .font(.system(size: 16))
                                             .foregroundColor(.jetblack)
                                             .padding()
-                                            .frame(width: 32, height: 32)
+                                            .frame(width: 40, height: 40)
                                             .background(Color.sunYellow)
                                             .cornerRadius(10)
                                     }
@@ -301,7 +301,7 @@ struct ShowMotherPregnantView: View {
                                             .font(.system(size: 16))
                                             .foregroundColor(.jetblack)
                                             .padding()
-                                            .frame(width: 32, height: 32)
+                                            .frame(width: 40, height: 40)
                                             .background(Color.sunYellow)
                                             .cornerRadius(10)
                                     }
@@ -314,7 +314,7 @@ struct ShowMotherPregnantView: View {
                                             .font(.system(size: 16))
                                             .foregroundColor(.jetblack)
                                             .padding()
-                                            .frame(width: 32, height: 32)
+                                            .frame(width: 40, height: 40)
                                             .background(Color.sunYellow)
                                             .cornerRadius(10)
                                     }
