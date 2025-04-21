@@ -89,8 +89,8 @@ struct BenefitView: View {
                     Text("สวัสดิการทางสุขภาพและการเงิน")
                         .font(customFont(type: .bold, textStyle: .title2))
                     
-                    Text("หน่วยงานที่เกี่ยวข้องกับพัฒนาการเด็กและชีวิตความเป็นอยู่")
-                        .font(customFont(type: .regular, textStyle: .footnote))
+                    Text("หน่วยงานที่เกี่ยวข้องกับเด็กและชีวิตความเป็นอยู่")
+                        .font(customFont(type: .regular, textStyle: .body))
                         .lineLimit(2, reservesSpace: true)
                 }
                 .foregroundColor(Color.jetblack)

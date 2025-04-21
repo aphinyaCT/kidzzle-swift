@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftEmailValidator
 
 struct SignUpView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
@@ -87,9 +88,9 @@ struct SignUpView: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 44)
-                    .background(.jetblack)
+                    .background(isFormValid ? .jetblack : Color.gray.opacity(0.5))
                     .cornerRadius(10)
-                    .disabled(password.isEmpty || email.isEmpty)
+                    .disabled(!isFormValid)
                     
                     Button {
                         showPrivacyPolicySheet = true
@@ -126,6 +127,17 @@ struct SignUpView: View {
                 }
             }
         }
+    }
+    
+    private var isFormValid: Bool {
+        let isEmailValid = SwiftEmailValidator.EmailSyntaxValidator.correctlyFormatted(email)
+        
+        let hasUppercase = password.contains { $0.isUppercase }
+        let hasLowercase = password.contains { $0.isLowercase }
+        let hasDigit = password.contains { $0.isNumber }
+        let isPasswordValid = password.count >= 8 && hasUppercase && hasLowercase && hasDigit
+        
+        return isEmailValid && isPasswordValid
     }
 }
 

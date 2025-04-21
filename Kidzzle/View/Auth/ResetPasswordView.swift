@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftEmailValidator
 
 struct ResetPasswordView: View {
     
@@ -96,6 +97,9 @@ struct ResetPasswordView: View {
                         .background(isEmailValid ? .jetblack : .gray.opacity(0.5))
                         .cornerRadius(10)
                         .disabled(!isEmailValid || authViewModel.isLoading)
+                        .onChange(of: email) { _, newValue in
+                            isEmailValid = SwiftEmailValidator.EmailSyntaxValidator.correctlyFormatted(newValue)
+                        }
                         
                     } else {
                         CustomTextFieldView(

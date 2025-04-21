@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftEmailValidator
 
 struct CustomTextFieldView: View {
     var sfIcon: String
@@ -86,6 +87,8 @@ struct CustomTextFieldView: View {
         
         if isEmail {
             allowedCharacters += "@.-_+%"
+        } else if isPassword {
+            allowedCharacters += "!@#$%^&*()_-+={}[]|:;<>,.?/~`"
         }
         
         return String(input.filter { allowedCharacters.contains($0) })
@@ -101,10 +104,15 @@ struct CustomTextFieldView: View {
         return hasUppercase && hasLowercase && hasDigit
     }
     
-    private func isValidEmail(_ email: String) -> Bool {
-        let emailRegex = "^(?=[A-Z0-9a-z._%+-]{1,64}@)(?!.*[-]{2,})[A-Z0-9a-z]([A-Z0-9a-z._%+-]*[A-Z0-9a-z])?@[A-Za-z0-9]([A-Za-z0-9.-]*[A-Za-z0-9])?\\.[A-Za-z]{2,64}$"
-        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
-        return emailPredicate.evaluate(with: email) && email.count <= 254
+    func isValidEmail(_ email: String) -> Bool {
+        let allowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.@_-+"
+        let hasInvalidChars = email.contains { !allowedCharacters.contains($0) }
+        
+        if hasInvalidChars {
+            return false
+        }
+        
+        return SwiftEmailValidator.EmailSyntaxValidator.correctlyFormatted(email)
     }
     
     private func borderColor(for value: String) -> Color {

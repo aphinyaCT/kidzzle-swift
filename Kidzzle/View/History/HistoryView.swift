@@ -201,7 +201,7 @@ struct HistoryView: View {
                         .font(customFont(type: .bold, textStyle: .title2))
                     
                     Text("เลือกประวัติมารดาเพื่อดูรายละเอียดของลูกน้อย")
-                        .font(customFont(type: .regular, textStyle: .footnote))
+                        .font(customFont(type: .regular, textStyle: .body))
                         .lineLimit(2, reservesSpace: true)
                 }
                 .foregroundColor(Color.jetblack)

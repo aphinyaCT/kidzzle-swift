@@ -11,6 +11,7 @@
 		2F4615982DA031BA00798982 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2F4615972DA031BA00798982 /* GoogleSignInSwift */; };
 		2F46159B2DA031D500798982 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2F46159A2DA031D500798982 /* SDWebImageSwiftUI */; };
 		2F46159E2DA0320600798982 /* ScalingHeaderScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = 2F46159D2DA0320600798982 /* ScalingHeaderScrollView */; };
+		2F8309022DB6309C006B9862 /* SwiftEmailValidator in Frameworks */ = {isa = PBXBuildFile; productRef = 2F8309012DB6309C006B9862 /* SwiftEmailValidator */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 				2F4615962DA031BA00798982 /* GoogleSignIn in Frameworks */,
 				2F4615982DA031BA00798982 /* GoogleSignInSwift in Frameworks */,
 				2F46159E2DA0320600798982 /* ScalingHeaderScrollView in Frameworks */,
+				2F8309022DB6309C006B9862 /* SwiftEmailValidator in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +95,7 @@
 				2F4615972DA031BA00798982 /* GoogleSignInSwift */,
 				2F46159A2DA031D500798982 /* SDWebImageSwiftUI */,
 				2F46159D2DA0320600798982 /* ScalingHeaderScrollView */,
+				2F8309012DB6309C006B9862 /* SwiftEmailValidator */,
 			);
 			productName = Kidzzle;
 			productReference = 2F4615862DA0304400798982 /* Kidzzle.app */;
@@ -126,6 +129,7 @@
 				2F4615942DA031B900798982 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				2F4615992DA031D500798982 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				2F46159C2DA0320600798982 /* XCRemoteSwiftPackageReference "ScalingHeaderScrollView" */,
+				2F8309002DB6309C006B9862 /* XCRemoteSwiftPackageReference "SwiftEmailValidator" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2F4615872DA0304400798982 /* Products */;
@@ -407,6 +411,14 @@
 				minimumVersion = 1.1.7;
 			};
 		};
+		2F8309002DB6309C006B9862 /* XCRemoteSwiftPackageReference "SwiftEmailValidator" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ekscrypto/SwiftEmailValidator";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -429,6 +441,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2F46159C2DA0320600798982 /* XCRemoteSwiftPackageReference "ScalingHeaderScrollView" */;
 			productName = ScalingHeaderScrollView;
+		};
+		2F8309012DB6309C006B9862 /* SwiftEmailValidator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2F8309002DB6309C006B9862 /* XCRemoteSwiftPackageReference "SwiftEmailValidator" */;
+			productName = SwiftEmailValidator;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

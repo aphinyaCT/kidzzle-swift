@@ -163,7 +163,6 @@ struct AssessmentChartView: View {
                                 }
                             }
                         }
-                        .frame(maxHeight: 150)
                     }
                 }
             }

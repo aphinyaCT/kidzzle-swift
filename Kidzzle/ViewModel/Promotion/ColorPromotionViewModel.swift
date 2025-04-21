@@ -160,7 +160,6 @@ class ColorPromotionViewModel: NSObject, ObservableObject {
     
     // MARK: - Audio Playback
     func playPromotionColorAudio(for color: PromotionColor) {
-        // หยุดเสียงที่กำลังเล่นอยู่ก่อน (ถ้ามี)
         if audioPlayer?.isPlaying == true {
             audioPlayer?.stop()
             currentlyPlayingID = nil
@@ -330,7 +329,7 @@ class ColorPromotionViewModel: NSObject, ObservableObject {
                     
                     // หยุดบันทึกเสียงอัตโนมัติถ้าพูดถูกต้อง
                     if self.isSpeechCorrect || (!self.transcribedText.isEmpty && isFinal) {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                             if self.isRecording {
                                 self.stopSpeechRecognitionInternal()
                             }

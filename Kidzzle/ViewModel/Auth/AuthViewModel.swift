@@ -438,7 +438,7 @@ class AuthViewModel: ObservableObject {
                     }
                     
                     guard let user = result?.user,
-                          let idToken = user.idToken?.tokenString else {
+                          let _ = user.idToken?.tokenString else {
                         self?.handleLoginError(error: NSError(domain: "LoginError", code: -1, userInfo: [NSLocalizedDescriptionKey: "No user found or missing ID token"]), method: "Google")
                         self?.showSocialLoginErrorToast = true
                         continuation.resume(returning: (false, "ไม่พบข้อมูลผู้ใช้หรือ token จาก Google"))

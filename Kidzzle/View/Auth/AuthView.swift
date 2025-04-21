@@ -7,6 +7,7 @@
 
 import SwiftUI
 import GoogleSignIn
+import SwiftEmailValidator
 
 struct AuthView: View {
     
@@ -98,9 +99,9 @@ struct AuthView: View {
                             }
                             .frame(maxWidth: .infinity)
                             .frame(height: 44)
-                            .background(.jetblack)
+                            .background(isFormValid ? .jetblack : Color.gray.opacity(0.5))
                             .cornerRadius(10)
-                            .disabled(email.isEmpty || password.isEmpty)
+                            .disabled(email.isEmpty || password.isEmpty || !isFormValid)
                             
                             HStack {
                                 Rectangle()
@@ -213,7 +214,14 @@ struct AuthView: View {
     }
     
     private var isFormValid: Bool {
-        !email.isEmpty && email.contains("@") && email.contains(".")
+        let isEmailValid = SwiftEmailValidator.EmailSyntaxValidator.correctlyFormatted(email)
+        
+        let hasUppercase = password.contains { $0.isUppercase }
+        let hasLowercase = password.contains { $0.isLowercase }
+        let hasDigit = password.contains { $0.isNumber }
+        let isPasswordValid = password.count >= 8 && hasUppercase && hasLowercase && hasDigit
+        
+        return isEmailValid && isPasswordValid
     }
 }
 
