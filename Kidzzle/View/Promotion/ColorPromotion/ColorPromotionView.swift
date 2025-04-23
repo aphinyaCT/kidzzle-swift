@@ -307,12 +307,13 @@ struct ColorPromotionCard: View {
                     }) {
                         Text("ถัดไป")
                             .font(customFont(type: .bold, textStyle: .body))
+                            .foregroundColor(viewModel.isSpeechCorrect ? .white : .gray)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .background(viewModel.isSpeechCorrect ? .greenMint : .gray)
+                            .cornerRadius(10)
                     }
-                    .foregroundColor(viewModel.isSpeechCorrect ? .white : .gray)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
-                    .background(viewModel.isSpeechCorrect ? .greenMint : .gray)
-                    .cornerRadius(10)
+                    .contentShape(.rect)
                     .disabled(!viewModel.isSpeechCorrect)
                     .opacity(viewModel.isSpeechCorrect ? 1.0 : 0.5)
                     .padding(.horizontal, 20)

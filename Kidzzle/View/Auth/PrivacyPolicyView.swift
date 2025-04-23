@@ -100,6 +100,7 @@ struct PrivacyPolicyView: View {
                         .background(.jetblack)
                         .cornerRadius(10)
                 })
+                .contentShape(.rect)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 40)
             }

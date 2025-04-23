@@ -84,12 +84,13 @@ struct SignUpView: View {
                                     .font(customFont(type: .semibold, textStyle: .body))
                             }
                         }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 44)
+                        .foregroundColor(.white)
+                        .background(isFormValid ? .jetblack : Color.gray.opacity(0.5))
+                        .cornerRadius(10)
                     })
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 44)
-                    .background(isFormValid ? .jetblack : Color.gray.opacity(0.5))
-                    .cornerRadius(10)
+                    .contentShape(.rect)
                     .disabled(!isFormValid)
                     
                     Button {

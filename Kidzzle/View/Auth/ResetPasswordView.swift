@@ -90,12 +90,13 @@ struct ResetPasswordView: View {
                                         .font(customFont(type: .semibold, textStyle: .body))
                                 }
                             }
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.white)
+                            .frame(height: 44)
+                            .background(isEmailValid ? .jetblack : .gray.opacity(0.5))
+                            .cornerRadius(10)
                         })
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 44)
-                        .background(isEmailValid ? .jetblack : .gray.opacity(0.5))
-                        .cornerRadius(10)
+                        .contentShape(.rect)
                         .disabled(!isEmailValid || authViewModel.isLoading)
                         .onChange(of: email) { _, newValue in
                             isEmailValid = SwiftEmailValidator.EmailSyntaxValidator.correctlyFormatted(newValue)
@@ -140,12 +141,13 @@ struct ResetPasswordView: View {
                                         .font(customFont(type: .semibold, textStyle: .body))
                                 }
                             }
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 44)
+                            .background(isPasswordValid ? .jetblack : .gray.opacity(0.5))
+                            .cornerRadius(10)
                         })
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 44)
-                        .background(isPasswordValid ? .jetblack : .gray.opacity(0.5))
-                        .cornerRadius(10)
+                        .contentShape(.rect)
                         .disabled(!isPasswordValid || authViewModel.isLoading)
                     }
                     

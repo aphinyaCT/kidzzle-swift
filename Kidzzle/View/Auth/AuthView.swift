@@ -88,19 +88,22 @@ struct AuthView: View {
                                     }
                                 }
                             } label: {
-                                if isSubmitting || authViewModel.isLoading {
-                                    ProgressView()
-                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                } else {
-                                    Text("เข้าสู่ระบบ")
-                                        .font(customFont(type: .semibold, textStyle: .body))
-                                        .foregroundColor(.white)
+                                ZStack {
+                                    if isSubmitting || authViewModel.isLoading {
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                    } else {
+                                        Text("เข้าสู่ระบบ")
+                                            .font(customFont(type: .semibold, textStyle: .body))
+                                            .foregroundColor(.white)
+                                    }
                                 }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 44)
+                                .background(isFormValid ? .jetblack : Color.gray.opacity(0.5))
+                                .cornerRadius(10)
                             }
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 44)
-                            .background(isFormValid ? .jetblack : Color.gray.opacity(0.5))
-                            .cornerRadius(10)
+                            .contentShape(.rect)
                             .disabled(email.isEmpty || password.isEmpty || !isFormValid)
                             
                             HStack {
@@ -138,16 +141,16 @@ struct AuthView: View {
                                         .font(customFont(type: .semibold, textStyle: .body))
                                         .foregroundColor(.jetblack)
                                 }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 44)
+                                .background(Color.white)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(.jetblack, lineWidth: 1)
+                                )
+                                .cornerRadius(10)
                             }
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 44)
-                            .background(Color.white)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(.jetblack, lineWidth: 1)
-                            )
-                            .cornerRadius(10)
-                            
+                            .contentShape(.rect)
                             
                             Spacer()
                             
