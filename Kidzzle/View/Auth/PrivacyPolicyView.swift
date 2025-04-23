@@ -15,6 +15,7 @@ struct PrivacyPolicyView: View {
             VStack(alignment: .leading, spacing: 0) {
                 HStack {
                     Text("นโยบายและความเป็นส่วนตัว")
+                        .foregroundColor(.jetblack)
                         .font(customFont(type: .bold, textStyle: .title3))
                     Spacer()
                 }
@@ -46,9 +47,11 @@ struct PrivacyPolicyView: View {
                         
                         VStack(alignment: .leading, spacing: 8) {
                             Text("การยินยอมให้ KIDZZLE ใช้ข้อมูลโดยไม่ระบุตัวตน")
+                                .foregroundColor(.jetblack)
                                 .font(customFont(type: .semibold, textStyle: .callout))
                             
                             Text("ผู้ใช้สามารถเลือกที่จะยินยอม หรือไม่ให้ความยินยอมก็ได้ ให้เรานำข้อมูลที่ไม่ระบุตัวตนของท่านไปใช้ดังนี้")
+                                .foregroundColor(.jetblack)
                                 .font(customFont(type: .regular, textStyle: .callout))
                             
                             VStack(alignment: .leading, spacing: 4) {
@@ -98,7 +101,7 @@ struct PrivacyPolicyView: View {
                         .cornerRadius(10)
                 })
                 .padding(.horizontal, 20)
-                .padding(.top, 40)
+                .padding(.vertical, 40)
             }
             .background(.ivorywhite)
             .frame(maxWidth: .infinity, alignment: .center)

@@ -42,7 +42,7 @@ struct KidzzleApp: App {
     @State private var isShowingSplash = true
     
     @StateObject private var authViewModel = AuthViewModel()
-    
+
     var body: some Scene {
         WindowGroup {
             if isShowingSplash {
