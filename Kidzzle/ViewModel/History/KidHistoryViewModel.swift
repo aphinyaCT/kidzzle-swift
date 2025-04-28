@@ -464,58 +464,32 @@ class KidHistoryViewModel: ObservableObject {
     }
     
     // MARK: - Status Evaluation Functions
-    func evaluateBirthWeightStatus(weightString: String, gestationalAgeString: String) -> String {
-        guard let weight = Double(weightString) else { return "น้ำหนักไม่ถูกต้อง" }
+    func evaluateBirthWeightStatus(weightString: String) -> (status: String, color: Color) {
+        guard let weightInGrams = Double(weightString) else {
+            return ("น้ำหนักไม่ถูกต้อง", .gray)
+        }
         
-        let digits = gestationalAgeString.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
-        guard let gestationalWeeks = Int(digits) else { return "อายุครรภ์ไม่ถูกต้อง" }
-
-        switch gestationalWeeks {
-        case ...36:
-            if weight < 2.0 {
-                return "น้ำหนักน้อยกว่าเกณฑ์"
-            } else if weight > 2.5 {
-                return "น้ำหนักมากกว่าเกณฑ์"
-            } else {
-                return "น้ำหนักปกติ"
-            }
-        case 37...38:
-            if weight < 2.5 {
-                return "น้ำหนักน้อยกว่าเกณฑ์"
-            } else if weight > 3.2 {
-                return "น้ำหนักมากกว่าเกณฑ์"
-            } else {
-                return "น้ำหนักปกติ"
-            }
-        case 39...40:
-            if weight < 2.6 {
-                return "น้ำหนักน้อยกว่าเกณฑ์"
-            } else if weight > 4.0 {
-                return "น้ำหนักมากกว่าเกณฑ์"
-            } else {
-                return "น้ำหนักปกติ"
-            }
-        default:
-            if weight < 2.8 {
-                return "น้ำหนักน้อยกว่าเกณฑ์"
-            } else if weight > 4.2 {
-                return "น้ำหนักมากกว่าเกณฑ์"
-            } else {
-                return "น้ำหนักปกติ"
-            }
+        if weightInGrams < 2500 {
+            return ("น้ำหนักน้อยกว่าเกณฑ์", .coralRed)
+        } else if weightInGrams > 4000 {
+            return ("น้ำหนักมากกว่าเกณฑ์", .deepBlue)
+        } else {
+            return ("น้ำหนักปกติ", .jetblack)
         }
     }
-    
-    func evaluateGestationalDeliveryStatus(_ gestationalAgeString: String) -> String {
+
+    func evaluateGestationalDeliveryStatus(_ gestationalAgeString: String) -> (status: String, color: Color) {
         let digits = gestationalAgeString.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
-        guard let weeks = Int(digits) else { return "อายุครรภ์ไม่ถูกต้อง" }
+        guard let weeks = Int(digits) else {
+            return ("อายุครรภ์ไม่ถูกต้อง", .gray)
+        }
         
         if weeks < 37 {
-            return "คลอดก่อนกำหนด"
+            return ("คลอดก่อนกำหนด", .coralRed)
         } else if weeks <= 42 {
-            return "คลอดตามกำหนด"
+            return ("คลอดตามกำหนด", .jetblack)
         } else {
-            return "คลอดเกินกำหนด"
+            return ("คลอดเกินกำหนด", .deepBlue)
         }
     }
 }

@@ -320,14 +320,15 @@ struct ShowKidHistoryView: View {
                        }
                        
                        HStack (spacing: 24) {
-                           
                            HStack {
                                Image(systemName: "staroflife.fill")
                                    .font(.system(size: 16))
                                    .foregroundColor(.jetblack)
                                
-                               Text(viewModel.evaluateGestationalDeliveryStatus(selectedKid.kidGestationalAge ?? "ไม่ระบุ"))
+                               let gestationalResult = viewModel.evaluateGestationalDeliveryStatus(selectedKid.kidGestationalAge ?? "ไม่ระบุ")
+                               Text(gestationalResult.status)
                                    .font(customFont(type: .regular, textStyle: .footnote))
+                                   .foregroundColor(gestationalResult.color)
                            }
                            
                            HStack {
@@ -335,16 +336,21 @@ struct ShowKidHistoryView: View {
                                    .font(.system(size: 16))
                                    .foregroundColor(.jetblack)
                                
-                               Text(viewModel.evaluateBirthWeightStatus(
-                                   weightString: selectedKid.kidBirthWeight ?? "ไม่ระบุ",
-                                   gestationalAgeString: selectedKid.kidGestationalAge ?? "ไม่ระบุ"))
+                               let weightResult = viewModel.evaluateBirthWeightStatus(weightString: selectedKid.kidBirthWeight ?? "ไม่ระบุ")
+                               Text(weightResult.status)
                                    .font(customFont(type: .regular, textStyle: .footnote))
+                                   .foregroundColor(weightResult.color)
                            }
                        }
                    }
                    .padding()
-                   .background(Color.sunYellow.opacity(0.2))
+                   .frame(maxWidth: .infinity)
+                   .background(Color.white)
                    .cornerRadius(10)
+                   .overlay(
+                       RoundedRectangle(cornerRadius: 10)
+                           .stroke(Color.sunYellow, lineWidth: 1)
+                   )
                }
                .foregroundColor(Color.jetblack)
                .padding(.horizontal, 20)

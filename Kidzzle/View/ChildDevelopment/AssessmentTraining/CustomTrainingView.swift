@@ -18,7 +18,7 @@ struct CustomTrainingView: View {
     @State var progress: CGFloat = 0
     
     private let minHeight = 100.0
-    private let maxHeight = 150.0
+    private let maxHeight = 200.0
     
     var body: some View {
         GeometryReader { geometry in
@@ -42,6 +42,7 @@ struct CustomTrainingView: View {
                                 } else {
                                     VStack(spacing: 16) {
                                         ForEach(viewModel.developmentTrainings, id: \.trainingMethodsId) { training in
+                                            AssessmentExpandingCard(viewModel: viewModel, question: question)
                                             TrainingExpandingCard(viewModel: viewModel, question: question, training: training)
                                         }
                                     }
@@ -88,7 +89,7 @@ struct CustomTrainingView: View {
                     })
                     .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
                     
-                    Text("วิธีการประเมินและฝึกทักษะ \(viewModel.selectedAssessmentType == "ASSMTT_1" ? "DSPM" : "DAIM")")
+                    Text("วิธีการประเมินและฝึกทักษะ \(viewModel.selectedAssessmentType == "ASSMTT_1" ? "DSPM" : "DAIM") #\(question.assessmentNo)")
                         .font(customFont(type: .bold, textStyle: .headline))
                 }
                 
@@ -124,7 +125,7 @@ struct CustomTrainingView: View {
                     })
                     .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
                     
-                    Text("วิธีการประเมินและฝึกทักษะ \(viewModel.selectedAssessmentType == "ASSMTT_1" ? "DSPM" : "DAIM")")
+                    Text("วิธีการประเมินและฝึกทักษะ \(viewModel.selectedAssessmentType == "ASSMTT_1" ? "DSPM" : "DAIM") \nข้อที่ #\(question.assessmentNo)")
                         .font(customFont(type: .bold, textStyle: .title2))
                     
                 }
@@ -141,6 +142,115 @@ struct CustomTrainingView: View {
             Spacer()
         }
         .background(Color.ivorywhite)
+    }
+}
+
+// MARK: Training Expanding Card
+struct AssessmentExpandingCard: View {
+    
+    @ObservedObject var viewModel: ChildDevelopmentViewModel
+    let question: AssessmentQuestionData
+    @State private var isExpanded = true
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Button(action: {
+                withAnimation {
+                    isExpanded.toggle()
+                }
+            }) {
+                HStack(spacing: 12) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.greenMint.opacity(0.2))
+                            .frame(width: 40, height: 40)
+                        
+                        Image(systemName: "text.page.badge.magnifyingglass")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.greenMint)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("#\(question.assessmentNo)")
+                            .font(customFont(type: .regular, textStyle: .caption1))
+                            .foregroundColor(.gray)
+                        
+                        Text("วิธีการประเมิน\(DevelopmentTypeHelper.getFullName(question.developmentType))")
+                            .font(customFont(type: .bold, textStyle: .headline))
+                            .foregroundColor(.jetblack)
+                    }
+                    
+                    Spacer()
+                    
+                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                        .font(.system(size: 16))
+                        .foregroundColor(.gray)
+                }
+                .padding(.vertical, 10)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(PlainButtonStyle())
+            
+            if isExpanded {
+                VStack(alignment: .leading, spacing: 16) {
+                    
+                    Divider()
+                    
+                    Text(StringHelper.cleanHtmlText(question.assessmentMethod))
+                        .font(customFont(type: .regular, textStyle: .body))
+                        .foregroundColor(.jetblack)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.leading)
+                    
+
+                        HStack {
+                            Image(systemName: "shippingbox.fill")
+                                .foregroundColor(.jetblack)
+                            
+                            Text("อุปกรณ์ที่ต้องใช้")
+                                .font(customFont(type: .regular, textStyle: .body))
+                                .foregroundColor(.jetblack)
+                        }
+                        .padding()
+                        .frame(height: 40)
+                        .background(Color.gray.opacity(0.2))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.gray, lineWidth: 1)
+                        )
+                        .cornerRadius(10)
+                        
+                        Text("\(question.assessmentRequiredTool ?? "ไม่ระบุ")")
+                            .font(customFont(type: .regular, textStyle: .body))
+                            .foregroundColor(.jetblack)
+                        
+                        HStack {
+                            Image(systemName: "checkmark.seal.fill")
+                                .foregroundColor(.greenMint)
+                            
+                            Text("ผ่านประเมิน")
+                                .font(customFont(type: .regular, textStyle: .body))
+                                .foregroundColor(.greenMint)
+                        }
+                        .padding()
+                        .frame(height: 40)
+                        .background(Color.greenMint.opacity(0.2))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.greenMint, lineWidth: 1)
+                        )
+                        .cornerRadius(10)
+                        
+                        Text("\(question.passCriteria)")
+                            .font(customFont(type: .regular, textStyle: .body))
+                            .foregroundColor(.jetblack)
+                }
+            }
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(10)
+        .shadow(color: isExpanded ? Color.black.opacity(0.1) : .clear, radius: 4, x: 0, y: 2)
     }
 }
 
@@ -201,7 +311,6 @@ struct TrainingExpandingCard: View {
                         .foregroundColor(.jetblack)
                         .fixedSize(horizontal: false, vertical: true)
                         .multilineTextAlignment(.leading)
-                    HStack {
                         HStack {
                             Image(systemName: "shippingbox.fill")
                                 .foregroundColor(.deepBlue)
@@ -222,7 +331,6 @@ struct TrainingExpandingCard: View {
                         Text("\(training.trainingRequiredTools ?? "ไม่ระบุ")")
                             .font(customFont(type: .regular, textStyle: .body))
                             .foregroundColor(.jetblack)
-                    }
                 }
             }
         }

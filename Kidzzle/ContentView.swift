@@ -75,13 +75,13 @@ struct MainTabView: View {
                 HistoryView()
                     .environmentObject(authViewModel)
             case 1:
-                PromotionView()
-            case 2:
                 ChildDevelopmentMainView(
                     authViewModel: authViewModel,
                     motherViewModel: motherViewModel,
                     kidViewModel: kidViewModel
                 )
+            case 2:
+                PromotionView()
             case 3:
                 BenefitView()
             case 4:
@@ -99,7 +99,7 @@ struct MainTabView: View {
                 await motherViewModel.fetchMotherPregnant()
                 
                 if !motherViewModel.motherPregnantDataList.isEmpty {
-                    selectedTab = 2
+                    selectedTab = 1
                 }
             }
         }

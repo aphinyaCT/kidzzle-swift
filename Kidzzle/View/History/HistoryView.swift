@@ -20,7 +20,7 @@ struct HistoryView: View {
     @State private var selectedPregnant: MotherPregnantData?
 
     private let minHeight = 100.0
-    private let maxHeight = 200.0
+    private let maxHeight = 230.0
 
     init() {
         let authVM = AuthViewModel()
@@ -44,7 +44,7 @@ struct HistoryView: View {
                         
                         VStack(alignment: .leading, spacing: 24) {
                             HStack {
-                                Text("ประวัติมารดาและลูกน้อย")
+                                Text("ประวัติมารดา")
                                     .font(customFont(type: .bold, textStyle: .body))
                                 
                                 Spacer()
@@ -66,7 +66,7 @@ struct HistoryView: View {
                             }
                             
                             if motherViewModel.motherPregnantDataList.isEmpty {
-                                EmptyView(message: "ยังไม่มีข้อมูลประวัติการตั้งครรภ์มารดา")
+                                EmptyView(message: "กดปุ่ม '+' เพื่อสร้างประวัติการตั้งครรภ์มารดา")
                                     .frame(maxWidth: .infinity, alignment: .center)
                             } else {
                                 ScrollView {
@@ -200,9 +200,9 @@ struct HistoryView: View {
                     Text("บันทึกประวัติ")
                         .font(customFont(type: .bold, textStyle: .title2))
                     
-                    Text("เลือกประวัติมารดาเพื่อดูรายละเอียดของลูกน้อย")
-                        .font(customFont(type: .regular, textStyle: .body))
-                        .lineLimit(2, reservesSpace: true)
+                    Text("ขั้นตอนการใช้งาน:\n1. ประวัติมารดา: กดปุ่ม '+' เพื่อสร้างประวัติมารดา > กรอกข้อมูลและบันทึก\n2. ประวัติบุตร: กดเลือกประวัติมารดา > กดปุ่ม '+' เพื่อสร้างประวัติลูกน้อย")
+                        .font(customFont(type: .regular, textStyle: .caption1))
+                        .multilineTextAlignment(.leading)
                 }
                 .foregroundColor(Color.jetblack)
                 .padding(.horizontal, 20)
@@ -291,8 +291,12 @@ struct MotherPregnantCardView: View {
         }
         .padding()
         .frame(maxWidth: .infinity)
-        .background(Color.sunYellow.opacity(0.2))
+        .background(Color.white)
         .cornerRadius(10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color.sunYellow, lineWidth: 1)
+        )
     }
 }
 

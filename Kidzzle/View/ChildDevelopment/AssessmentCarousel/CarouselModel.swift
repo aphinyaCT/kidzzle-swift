@@ -9,9 +9,5 @@ import SwiftUI
 
 struct Manual: Identifiable, Equatable {
     let id: Int
-    let title: String
-    let subtitle: String
     let imageURL: String
-    let detail: String
-    let backgroundColor: Color
 }

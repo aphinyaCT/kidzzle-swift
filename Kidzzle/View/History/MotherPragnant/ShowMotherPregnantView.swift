@@ -28,6 +28,7 @@ struct ShowMotherPregnantView: View {
     @State private var showDeleteConfirmation: Bool = false
     @State private var showEditView: Bool = false
     @State private var showDetailView: Bool = false
+    @State private var showChildDevelopmentView:Bool = false
     
     @State private var refreshID = UUID()
     
@@ -89,7 +90,7 @@ struct ShowMotherPregnantView: View {
                                     }
                                 }
                             } else {
-                                Text("ยังไม่มีข้อมูลของลูกน้อย")
+                                Text("กดปุ่ม '+' เพื่อสร้างประวัติลูกน้อย")
                                     .font(customFont(type: .regular, textStyle: .body))
                                     .foregroundColor(.gray)
                                     .frame(maxWidth: .infinity, alignment: .center)
@@ -348,8 +349,13 @@ struct ShowMotherPregnantView: View {
                         }
                     }
                     .padding()
-                    .background(Color.sunYellow.opacity(0.2))
+                    .frame(maxWidth: .infinity)
+                    .background(Color.white)
                     .cornerRadius(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.sunYellow, lineWidth: 1)
+                    )
                 }
                 .foregroundColor(Color.jetblack)
                 .padding(.horizontal, 20)
@@ -486,8 +492,10 @@ struct KidCardView: View {
                         .font(.system(size: 16))
                         .foregroundColor(.jetblack)
                     
-                    Text(viewModel.evaluateGestationalDeliveryStatus(kid.kidGestationalAge ?? "ไม่ระบุ"))
+                    let gestationalResult = viewModel.evaluateGestationalDeliveryStatus(kid.kidGestationalAge ?? "ไม่ระบุ")
+                    Text(gestationalResult.status)
                         .font(customFont(type: .regular, textStyle: .footnote))
+                        .foregroundColor(gestationalResult.color)
                 }
                 
                 HStack {
@@ -495,17 +503,20 @@ struct KidCardView: View {
                         .font(.system(size: 16))
                         .foregroundColor(.jetblack)
                     
-                    Text(viewModel.evaluateBirthWeightStatus(
-                        weightString: kid.kidBirthWeight ?? "ไม่ระบุ",
-                        gestationalAgeString: kid.kidGestationalAge ?? "ไม่ระบุ"
-                    ))
-                    .font(customFont(type: .regular, textStyle: .footnote))
+                    let weightResult = viewModel.evaluateBirthWeightStatus(weightString: kid.kidBirthWeight ?? "ไม่ระบุ")
+                    Text(weightResult.status)
+                        .font(customFont(type: .regular, textStyle: .footnote))
+                        .foregroundColor(weightResult.color)
                 }
             }
         }
         .padding()
         .frame(maxWidth: .infinity)
-        .background(Color.sunYellow.opacity(0.2))
+        .background(Color.white)
         .cornerRadius(10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color.sunYellow, lineWidth: 1)
+        )
     }
 }

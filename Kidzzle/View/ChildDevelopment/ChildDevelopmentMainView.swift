@@ -53,9 +53,15 @@ struct ChildDevelopmentMainView: View {
                             
                             ManualCarouselView(manuals: manuals)
                             
-                            Text("การเฝ้าระวังและประเมินพัฒนาการ 5 ด้าน")
-                                .font(customFont(type: .bold, textStyle: .body))
-                                .foregroundColor(.jetblack)
+                            VStack (alignment: .leading, spacing: 10) {
+                                Text("การเฝ้าระวังและประเมินพัฒนาการ 5 ด้าน")
+                                    .font(customFont(type: .bold, textStyle: .body))
+                                    .foregroundColor(.jetblack)
+                                
+                                Text("เลือกแบบประเมินที่บุคลากรทางการแพทย์แนะนำเท่านั้น")
+                                    .font(customFont(type: .regular, textStyle: .callout))
+                                    .foregroundColor(.gray)
+                            }
                             
                             sortedPregnancyList
                             
@@ -327,8 +333,13 @@ struct AssessmentTypeCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
+            
             Text("ครรภ์ที่ \(pregnancyIndex + 1): \(kid.kidName ?? "ไม่พบชื่อ")")
-                .font(customFont(type: .bold, textStyle: .body))
+                .font(customFont(type: .bold, textStyle: .callout))
+                .lineLimit(1)
+
+            Text(AgeHelper.formatAge(from: kid.kidBirthday))
+                .font(customFont(type: .bold, textStyle: .callout))
             
             AssessmentTypeButton(
                 image: "https://res.cloudinary.com/dw7lzqrbz/image/upload/v1744735943/KIDZZLE-DSPM_sztip9.png",

@@ -27,6 +27,7 @@ struct AgeRangeData: Codable {
     let assessmentTypeId: String
     let maxMonths: String?
     let minMonths: String?
+    let assessmentVdoUrl: String?
 
     enum CodingKeys: String, CodingKey {
         case ageRange = "age_range"
@@ -34,48 +35,7 @@ struct AgeRangeData: Codable {
         case assessmentTypeId = "assessment_type_id"
         case maxMonths = "max_months"
         case minMonths = "min_months"
-    }
-    
-    // Helper method to display age range with proper formatting
-    func formattedAgeRange() -> String {
-        // If both min and max months are null
-        if minMonths == nil && maxMonths == nil {
-            return ageRange
-        }
-        
-        // Convert months to years and months
-        let formattedMin = formatMonthsToYears(minMonths)
-        let formattedMax = formatMonthsToYears(maxMonths)
-        
-        // Combine formatted ranges
-        if let min = formattedMin, let max = formattedMax {
-            return "\(min) - \(max)"
-        } else if let min = formattedMin {
-            return "ตั้งแต่ \(min)"
-        } else if let max = formattedMax {
-            return "ถึง \(max)"
-        }
-        
-        return ageRange
-    }
-    
-    private func formatMonthsToYears(_ monthsString: String?) -> String? {
-        guard let monthsString = monthsString, let months = Int(monthsString) else {
-            return nil
-        }
-        
-        if months < 12 {
-            return "\(months) เดือน"
-        } else {
-            let years = months / 12
-            let remainingMonths = months % 12
-            
-            if remainingMonths == 0 {
-                return "\(years) ปี"
-            } else {
-                return "\(years) ปี \(remainingMonths) เดือน"
-            }
-        }
+        case assessmentVdoUrl = "assessment_video_url"
     }
 }
 
@@ -107,20 +67,17 @@ struct AssessmentQuestionData: Codable {
         case passCriteria = "pass_criteria"
         case questionText = "question_text"
     }
-    
-    // เพิ่ม init เพื่อให้สามารถกำหนดค่าเริ่มต้นถ้า decode ไม่สำเร็จ
+
     init(from decoder: Decoder) throws {
         do {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            
-            // Decode โดยพยายามเช็คข้อมูลที่มาในรูปแบบต่างๆ
+
             ageRangeId = try container.decode(String.self, forKey: .ageRangeId).trimmingCharacters(in: .whitespacesAndNewlines)
             ageRangeName = try container.decode(String.self, forKey: .ageRangeName)
             assessmentMethod = try container.decode(String.self, forKey: .assessmentMethod)
             assessmentNo = try container.decode(String.self, forKey: .assessmentNo)
             assessmentQuestionId = try container.decode(String.self, forKey: .assessmentQuestionId)
-            
-            // สำหรับฟิลด์ที่อาจเป็น null
+
             assessmentRequiredTool = try container.decodeIfPresent(String.self, forKey: .assessmentRequiredTool)
             
             assessmentTypeId = try container.decode(String.self, forKey: .assessmentTypeId)
@@ -135,8 +92,7 @@ struct AssessmentQuestionData: Codable {
             throw error
         }
     }
-    
-    // เพิ่ม initializer ปกติสำหรับการใช้งานโดยตรง
+
     init(ageRangeId: String, ageRangeName: String, assessmentMethod: String, assessmentNo: String,
          assessmentQuestionId: String, assessmentRequiredTool: String?, assessmentTypeId: String,
          assessmentTypeName: String, devTypeId: String, developmentType: String,
@@ -224,7 +180,6 @@ struct AssessmentResult: Codable, Identifiable {
         kidId = try container.decode(String.self, forKey: .kidId)
     }
     
-    // สถานะการประเมินแบบข้อความภาษาไทย
     var statusText: String {
         return isPassed ? "ผ่าน" : "ไม่ผ่าน"
     }

@@ -46,43 +46,15 @@ struct ManualCardView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            let isLargeScreen = geometry.size.width > 700
-            
-            HStack(alignment: .center, spacing: 16) {
-                WebImage(url: URL(string: manual.imageURL))
-                    .resizable()
-                    .indicator(.activity)
-                    .transition(.fade(duration: 0.5))
-                    .scaledToFit()
-                    .frame(height: isLargeScreen ? 120 : 96)
-                
-                Spacer()
-                
-                VStack(alignment: .trailing, spacing: 4) {
-                    Text(manual.title)
-                        .font(customFont(type: .bold, textStyle: isLargeScreen ? .subheadline : .footnote))
-                        .lineLimit(isLargeScreen ? 1 : 2, reservesSpace: isLargeScreen ? false : true)
-                    
-                    Text(manual.subtitle)
-                        .font(customFont(type: isLargeScreen ? .bold : .medium, textStyle: .footnote))
-                        .lineLimit(isLargeScreen ? 1 : 3, reservesSpace: isLargeScreen ? false : true)
-                    
-                    if isLargeScreen {
-                        Text(manual.detail)
-                            .font(customFont(type: .regular, textStyle: .footnote))
-                            .lineLimit(isLargeScreen ? 2 : 0, reservesSpace: isLargeScreen ? false : true)
-                            .padding(.top, 16)
-                    }
-                }
-                .foregroundColor(Color.white)
-                .multilineTextAlignment(.trailing)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-            }
-            .padding()
-            .background(manual.backgroundColor)
-            .frame(width: geometry.size.width)
-            .frame(height: 128)
-            .cornerRadius(10)
+            WebImage(url: URL(string: manual.imageURL))
+                .resizable()
+                .indicator(.activity)
+                .transition(.fade(duration: 0.5))
+                .scaledToFill()
+                .frame(width: geometry.size.width, height: 128)
+                .clipped()
+                .background(.gray)
+                .cornerRadius(10)
         }
         .frame(height: 128)
     }

@@ -20,7 +20,7 @@ class InformationViewModel: NSObject, ObservableObject {
     let information: [Information] = [
         Information(id: "1",
                     title: "วัคซีนเด็กปฐมวัย",
-                    infoURL: URL(string:"https://ddc.moph.go.th/uploads/publish/1510320231225092421.pdf")
+                    infoURL: URL(string:"https://ddc.moph.go.th/uploads/publish/1666720250130035107.pdf")
                    ),
         Information(id: "2",
                     title: "คู่มือมารดาหลังคลอด",
@@ -31,8 +31,8 @@ class InformationViewModel: NSObject, ObservableObject {
                     infoURL: URL(string: "https://nutrition2.anamai.moph.go.th/th/book/download/?did=217683&id=120995&reload=")
                    ),
         Information(id: "4",
-                    title: "อุปกรณ์ ของเล่น ส่งเสริมพัฒนาการ",
-                    infoURL: URL(string: "https://th.rajanukul.go.th/_admin/file-download/5-4535-1449802545.pdf")
+                    title: "การส่งเสริมพัฒนาการเด็กปฐมวัย 3-6 ปี",
+                    infoURL: URL(string: "http://academic.obec.go.th/images/document/1593157950_d_1.pdf")
                    )
     ]
     
@@ -50,8 +50,26 @@ class InformationViewModel: NSObject, ObservableObject {
         loadingStates[infoID] = true
         self.objectWillChange.send()
 
+        // สร้างชื่อไฟล์ที่ไม่ซ้ำกันสำหรับแต่ละ PDF
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let destinationURL = documentsPath.appendingPathComponent("pdf_\(infoID).pdf")
+        
+        // ตรวจสอบว่าไฟล์มีอยู่แล้วหรือไม่
+        if FileManager.default.fileExists(atPath: destinationURL.path) {
+            // ถ้ามีอยู่แล้ว ให้ใช้ไฟล์ที่มีอยู่เลย
+            self.selectedPDFURL = destinationURL
+            self.selectedPDFTitle = info.title
+            self.loadingStates[infoID] = false
+            self.objectWillChange.send()
+            self.showPDFViewer = true
+            return
+        }
+
         if url.scheme == "http" || url.scheme == "https" {
-            let task = URLSession.shared.downloadTask(with: url) { [weak self] tempLocalURL, response, error in
+            var request = URLRequest(url: url)
+            request.timeoutInterval = 60.0
+            
+            let task = URLSession.shared.downloadTask(with: request) { [weak self] tempLocalURL, response, error in
                 DispatchQueue.main.async {
                     guard let self = self else { return }
                     
@@ -63,18 +81,27 @@ class InformationViewModel: NSObject, ObservableObject {
                     }
                     
                     guard let tempLocalURL = tempLocalURL else {
+                        print("No temporary URL received")
+                        self.loadingStates[infoID] = false
+                        self.objectWillChange.send()
+                        return
+                    }
+
+                    if !FileManager.default.fileExists(atPath: tempLocalURL.path) {
+                        print("Error: Temporary file doesn't exist at path: \(tempLocalURL.path)")
                         self.loadingStates[infoID] = false
                         self.objectWillChange.send()
                         return
                     }
                     
-                    let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                    let destinationURL = documentsPath.appendingPathComponent("downloaded.pdf")
-                    
-                    try? FileManager.default.removeItem(at: destinationURL)
-                    
                     do {
+                        if FileManager.default.fileExists(atPath: destinationURL.path) {
+                            try FileManager.default.removeItem(at: destinationURL)
+                        }
+                        
                         try FileManager.default.copyItem(at: tempLocalURL, to: destinationURL)
+                        print("PDF saved successfully: \(destinationURL.path)")
+                        
                         self.selectedPDFURL = destinationURL
                         self.selectedPDFTitle = info.title
                         self.loadingStates[infoID] = false

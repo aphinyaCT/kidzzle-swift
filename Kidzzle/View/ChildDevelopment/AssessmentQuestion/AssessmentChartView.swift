@@ -51,6 +51,7 @@ struct AssessmentChartView: View {
         let domainFullName = getDomainFullName(for: questionId)
         
         return VStack(alignment: .leading, spacing: 24) {
+            
             Text("ประเภท: \(domainFullName)")
                 .font(customFont(type: .bold, textStyle: .body))
                 .foregroundColor(.jetblack)
@@ -165,6 +166,49 @@ struct AssessmentChartView: View {
                         }
                     }
                 }
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack (spacing: 8) {
+                        Image(systemName: "exclamationmark.bubble.fill")
+                            .font(.system(size: 24))
+                            .foregroundColor(.yellow)
+                            .padding(8)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                        
+                        Text("คำแนะนำหลังการประเมิน")
+                            .font(customFont(type: .bold, textStyle: .body))
+                            .foregroundColor(.jetblack)
+                    }
+                    
+                    Text("• กรณีประเมินแล้วพบว่าสมวัย")
+                        .font(customFont(type: .bold, textStyle: .body))
+                    
+                    Text("แนะนำให้ส่งเสริมพัฒนาการเด็กในช่วงอายุต่อไปตามคู่มือฯ")
+                        .font(customFont(type: .regular, textStyle: .body))
+                    
+                    Text("• กรณีที่เด็กประเมินแล้วพบว่าไม่สมวัย")
+                        .font(customFont(type: .bold, textStyle: .body))
+                    
+                    Text("ส่งเสริมพัฒนาการเด็กตามคู่มือฯ ในข้อทักษะที่เด็กไม่ผ่านการประเมินบ่อย ๆ หลังจากนั้นอีก 1 เดือน กลับมาประเมินซ้ำ")
+                        .font(customFont(type: .regular, textStyle: .body))
+                    
+                    Text("• กรณีประเมินซ้ำแล้วยังไม่สมวัย")
+                        .font(customFont(type: .bold, textStyle: .body))
+
+                    Text("ส่งต่อตรวจและวินิจฉัยเพิ่มเติมที่โรงพยาบาล (รพช./รพท./ รพศ./รพ.จิตเวช) พร้อมใบส่งตัว")
+                        .font(customFont(type: .regular, textStyle: .body))
+                }
+                .foregroundColor(.jetblack)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.white)
+                .cornerRadius(10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.sunYellow, lineWidth: 1)
+                )
             }
         }
     }

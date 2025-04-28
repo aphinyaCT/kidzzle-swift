@@ -36,6 +36,30 @@ struct CustomQuestionsListView: View {
 
                             TabSelectorView(selectedTab: $selectedTab)
                             
+                            if selectedTab != .summary && ageRange.assessmentVdoUrl != nil && !(ageRange.assessmentVdoUrl?.isEmpty ?? true) {
+                                Button(action: {
+                                    if let videoUrl = ageRange.assessmentVdoUrl,
+                                       let url = URL(string: videoUrl),
+                                       UIApplication.shared.canOpenURL(url) {
+                                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                                    }
+                                }) {
+                                    HStack {
+                                        Image(systemName: "video.bubble")
+                                            .font(.system(size: 16))
+                                            .foregroundColor(.white)
+                                        
+                                        Text("วิดีโอสาธิตการประเมิน")
+                                            .foregroundColor(.white)
+                                            .font(customFont(type: .bold, textStyle: .callout))
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 44)
+                                    .background(Color.coralRed)
+                                    .cornerRadius(10)
+                                }
+                            }
+                            
                             if selectedTab == .questions {
                                 if isLoading {
                                     VStack {
@@ -257,7 +281,7 @@ struct QuestionExpandingCard: View {
                 VStack(alignment: .leading, spacing: 16) {
                     Divider()
                     
-                    Text(question.questionText)
+                    Text("ทักษะ: \(question.questionText)")
                         .font(customFont(type: .medium, textStyle: .body))
                         .foregroundColor(.primary)
                         .fixedSize(horizontal: false, vertical: true)

@@ -13,20 +13,20 @@ struct CustomTabBarView: View {
     
     let icons = [
         "bookmark",
+        "text.page.badge.magnifyingglass",
         "bolt.heart",
-        "KIDZZLE-MASCOT",
         "cross.case",
         "book",
     ]
     
     let labels = [
         "บันทึกประวัติ",
+        "ประเมิน",
         "ส่งเสริม",
-        "พัฒนาการ",
         "สวัสดิการ",
         "ความรู้ทั่วไป"
     ]
-
+    
     var body: some View {
         HStack {
             Spacer()
@@ -36,21 +36,15 @@ struct CustomTabBarView: View {
                     self.selectedIndex = number
                 }) {
                     VStack(alignment: .center, spacing: 8) {
-                        if number == 2 {
-                            Image(icons[number])
-                                .resizable()
-                                .frame(width: number != 2 ? 64 : 60, height: number != 2 ? 64 : 60)
-                        } else {
-                            Image(systemName: icons[number])
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(selectedIndex == number ? .black : .gray)
-                            
-                            Text(labels[number])
-                                .font(Font.custom("NotoSansThai-Bold", size: 12))
-                                .foregroundColor(selectedIndex == number ? .black : .gray)
-                        }
+                        Image(systemName: icons[number])
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(selectedIndex == number ? .black : .gray)
+                        
+                        Text(labels[number])
+                            .font(Font.custom("NotoSansThai-Bold", size: 12))
+                            .foregroundColor(selectedIndex == number ? .black : .gray)
                     }
                     .frame(maxWidth: .infinity)
                 }
