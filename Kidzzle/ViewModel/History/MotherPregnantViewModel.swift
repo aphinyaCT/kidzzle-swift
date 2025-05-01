@@ -118,11 +118,19 @@ class MotherPregnantViewModel: ObservableObject {
         }
     }
     
+    // แก้ไขฟังก์ชัน fetchMotherPregnant ในไฟล์ MotherPregnantViewModel.swift
+
+    // MARK: - API Methods
     @MainActor
-    func fetchMotherPregnant() async {
+    func fetchMotherPregnant(forceRefresh: Bool = false) async {
         
         if isLoading {
             print("⚠️ Already loading, skipping fetch")
+            return
+        }
+        
+        if !forceRefresh && !motherPregnantDataList.isEmpty {
+            print("✅ Using cached mother pregnant data, \(motherPregnantDataList.count) records")
             return
         }
         

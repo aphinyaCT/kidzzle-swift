@@ -82,7 +82,7 @@ struct HistoryView: View {
                                                     
                                                     let pregnantId = pregnant.id
                                                     Task {
-                                                        await kidViewModel.fetchKidHistory(pregnantId: pregnantId)
+                                                        await kidViewModel.fetchKidHistoryIfNeeded(pregnantId: pregnantId)
                                                     }
                                                 }
                                         }
@@ -110,7 +110,7 @@ struct HistoryView: View {
             .ignoresSafeArea(.container, edges: [.top, .horizontal])
             .onAppear {
                 Task {
-                    await motherViewModel.fetchMotherPregnant()
+                    await motherViewModel.fetchMotherPregnant(forceRefresh: false)
                 }
             }
             .fullScreenCover(isPresented: $showAddMotherView) {

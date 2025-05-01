@@ -120,7 +120,8 @@ struct ShowMotherPregnantView: View {
                 
                 kidViewModel.pregnantId = selectedPregnant.id
                 Task {
-                    await kidViewModel.fetchKidHistory(pregnantId: kidViewModel.pregnantId)
+                    // ใช้ fetchKidHistoryIfNeeded แทน fetchKidHistory เพื่อลดการเรียก API ซ้ำ
+                    await kidViewModel.fetchKidHistoryIfNeeded(pregnantId: kidViewModel.pregnantId)
                 }
             }
             .fullScreenCover(isPresented: $showDetailView) {
@@ -130,7 +131,8 @@ struct ShowMotherPregnantView: View {
                 Task { @MainActor in
                     try? await Task.sleep(nanoseconds: 300_000_000)
                     
-                    await motherViewModel.fetchMotherPregnant()
+                    // ทำรีเฟรชเฉพาะเมื่อจำเป็น
+                    await motherViewModel.fetchMotherPregnant(forceRefresh: true)
                     
                     if let updatedPregnant = motherViewModel.motherPregnantDataList.first(where: { $0.id == selectedPregnant.id }) {
                         selectedPregnant = updatedPregnant
@@ -148,7 +150,8 @@ struct ShowMotherPregnantView: View {
             .fullScreenCover(isPresented: $showAddKidView) {
                 Task { @MainActor in
                     try? await Task.sleep(nanoseconds: 300_000_000)
-                    await kidViewModel.fetchKidHistory(pregnantId: kidViewModel.pregnantId)
+                    // ใช้ fetchKidHistoryIfNeeded แทน fetchKidHistory
+                    await kidViewModel.fetchKidHistoryIfNeeded(pregnantId: kidViewModel.pregnantId)
                 }
             } content: {
                 KidHistoryView(
@@ -167,7 +170,8 @@ struct ShowMotherPregnantView: View {
                 )
                 .onDisappear {
                     Task { @MainActor in
-                        await kidViewModel.fetchKidHistory(pregnantId: kidViewModel.pregnantId)
+                        // ใช้ fetchKidHistoryIfNeeded แทน fetchKidHistory
+                        await kidViewModel.fetchKidHistoryIfNeeded(pregnantId: kidViewModel.pregnantId)
                         kidViewModel.resetKidHistoryFields()
                     }
                 }

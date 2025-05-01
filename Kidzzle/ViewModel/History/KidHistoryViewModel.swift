@@ -217,6 +217,19 @@ class KidHistoryViewModel: ObservableObject {
     }
     
     @MainActor
+    func fetchKidHistoryIfNeeded(pregnantId: String) async {
+        print("🔍 Checking if kid history data needs to be fetched for pregnantId: \(pregnantId)")
+
+        if let existingData = kidHistoryDataDict[pregnantId], !existingData.isEmpty {
+            print("✅ Using cached kid history for pregnantId: \(pregnantId)")
+            return
+        }
+
+        print("🔄 No cached data found, fetching kid history for pregnantId: \(pregnantId)")
+        await fetchKidHistory(pregnantId: pregnantId)
+    }
+    
+    @MainActor
     func fetchKidHistory(pregnantId: String) async {
         print("🔍 Fetching kid history for pregnantId: \(pregnantId)")
 

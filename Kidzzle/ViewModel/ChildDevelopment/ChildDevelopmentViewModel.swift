@@ -132,9 +132,14 @@ class ChildDevelopmentViewModel: ObservableObject {
     
     // MARK: - API Methods: Data Fetching
     
-    /// ดึงข้อมูลช่วงอายุสำหรับประเภทการประเมินที่กำหนด
     @MainActor
     func fetchAgeRanges() async {
+        // ถ้ากำลังโหลดอยู่แล้ว ให้ข้ามการโหลดซ้ำ
+        if isLoading {
+            print("⚠️ Already loading age ranges, skipping fetch")
+            return
+        }
+        
         guard let accessToken = authViewModel?.accessToken, !accessToken.isEmpty else {
             errorMessage = "ไม่พบ Access Token"
             print("❌ Missing access token")
@@ -152,7 +157,10 @@ class ChildDevelopmentViewModel: ObservableObject {
             // เลือกช่วงอายุแรกเป็นค่าเริ่มต้น ถ้ามีข้อมูล
             if let firstRange = ageRanges.first {
                 selectedAgeRange = firstRange
-                await fetchAssessmentQuestions(ageRangeId: firstRange.ageRangeId)
+                // โหลดคำถามเฉพาะเมื่อจำเป็น
+                if assessmentQuestions.isEmpty {
+                    await fetchAssessmentQuestions(ageRangeId: firstRange.ageRangeId)
+                }
             }
         } catch let error as APIError {
             errorMessage = error.localizedDescription
@@ -167,6 +175,12 @@ class ChildDevelopmentViewModel: ObservableObject {
     
     @MainActor
     func fetchAssessmentQuestions(ageRangeId: String) async {
+        // ถ้ากำลังโหลดอยู่แล้ว ให้ข้ามการโหลดซ้ำ
+        if isLoading {
+            print("⚠️ Already loading assessment questions, skipping fetch")
+            return
+        }
+        
         guard let accessToken = authViewModel?.accessToken, !accessToken.isEmpty else {
             errorMessage = "ไม่พบ Access Token"
             print("❌ Missing access token")
@@ -176,6 +190,13 @@ class ChildDevelopmentViewModel: ObservableObject {
         guard let selectedAgeRange = ageRanges.first(where: { $0.ageRangeId == ageRangeId }) else {
             errorMessage = "ไม่พบข้อมูลช่วงอายุที่เลือก"
             print("❌ ไม่พบข้อมูลช่วงอายุสำหรับ ageRangeId: \(ageRangeId)")
+            return
+        }
+        
+        // ตรวจสอบว่ามีคำถามสำหรับ ageRangeId นี้อยู่แล้วหรือไม่
+        let existingQuestions = assessmentQuestions.filter { $0.ageRangeId == ageRangeId }
+        if !existingQuestions.isEmpty {
+            print("✅ ใช้คำถามจาก cache สำหรับ ageRangeId: \(ageRangeId)")
             return
         }
         
@@ -529,5 +550,28 @@ class ChildDevelopmentViewModel: ObservableObject {
                 $0.kidId == kidId
             }
             .count
+    }
+    
+    // MARK: - Data Caching & Optimization
+    @MainActor
+    func loadCoreDataIfNeeded() async {
+        // ตรวจสอบว่าข้อมูลพื้นฐานได้โหลดแล้วหรือไม่
+        if !ageRanges.isEmpty && !assessmentQuestions.isEmpty {
+            print("✅ Using cached development data")
+            return
+        }
+        
+        // ถ้ายังไม่มีข้อมูล จึงเรียก API
+        print("🔄 Loading core development data...")
+        
+        // โหลดข้อมูลพื้นฐานที่จำเป็น
+        if ageRanges.isEmpty {
+            await fetchAgeRanges()
+        }
+        
+        // ถ้ามี selected age range แล้ว ให้โหลดคำถามด้วย
+        if let selectedAgeRange = selectedAgeRange, assessmentQuestions.isEmpty {
+            await fetchAssessmentQuestions(ageRangeId: selectedAgeRange.ageRangeId)
+        }
     }
 }
