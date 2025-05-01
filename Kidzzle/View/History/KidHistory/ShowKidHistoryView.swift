@@ -125,7 +125,7 @@ struct ShowKidHistoryView: View {
                        HistoryLabelText(
                            title: "อายุครรภ์ตอนคลอด",
                            value: "\(selectedKid.kidGestationalAge ?? "ไม่ระบุ") สัปดาห์",
-                           sfIcon: "staroflife.fill"
+                           sfIcon: "clock"
                        )
                        
                        HistoryLabelText(
@@ -321,7 +321,7 @@ struct ShowKidHistoryView: View {
                        
                        HStack (spacing: 24) {
                            HStack {
-                               Image(systemName: "staroflife.fill")
+                               Image(systemName: "clock")
                                    .font(.system(size: 16))
                                    .foregroundColor(.jetblack)
                                

@@ -488,7 +488,7 @@ struct KidCardView: View {
             
             HStack (spacing: 24) {
                 HStack {
-                    Image(systemName: "staroflife.fill")
+                    Image(systemName: "clock")
                         .font(.system(size: 16))
                         .foregroundColor(.jetblack)
                     

@@ -101,7 +101,7 @@ struct KidHistoryView: View {
                             CustomHistoryTextField(
                                 title: "อายุครรภ์ตอนคลอด",
                                 hint: "อายุ",
-                                sfIcon: "staroflife.fill",
+                                sfIcon: "clock",
                                 value: $viewModel.kidGestationalAge,
                                 isGestationalAge: true,
                                 measurementUnit: "สัปดาห์"
