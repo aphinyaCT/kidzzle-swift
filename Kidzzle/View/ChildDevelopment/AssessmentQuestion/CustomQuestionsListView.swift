@@ -104,6 +104,21 @@ struct CustomQuestionsListView: View {
                 .collapseProgress($progress)
                 .allowsHeaderGrowth()
                 .background(Color.ivorywhite)
+                .refreshable {
+                    Task {
+                        isLoading = true
+                        await viewModel.fetchAssessmentQuestions(ageRangeId: ageRange.ageRangeId)
+                        
+                        if let selectedAgeRange = viewModel.selectedAgeRange {
+                            await viewModel.fetchAssessmentResults(
+                                kidId: viewModel.selectedKidId,
+                                ageRangeId: selectedAgeRange.ageRangeId,
+                                assessmentTypeId: viewModel.selectedAssessmentType
+                            )
+                        }
+                        isLoading = false
+                    }
+                }
                 
                 smallHeader
             }
@@ -112,7 +127,7 @@ struct CustomQuestionsListView: View {
             .onAppear {
                 isLoading = true
                 Task {
-                    await viewModel.fetchAssessmentQuestions(ageRangeId: ageRange.ageRangeId)
+                    await viewModel.fetchAssessmentQuestionsIfNeeded(ageRangeId: ageRange.ageRangeId)
                     isLoading = false
                 }
             }
@@ -452,7 +467,7 @@ struct QuestionExpandingCard: View {
                 await viewModel.fetchKidData()
                 
                 if let selectedAgeRange = viewModel.selectedAgeRange {
-                    await viewModel.fetchAssessmentResults(
+                    await viewModel.fetchAssessmentResultsIfNeeded(
                         kidId: viewModel.selectedKidId,
                         ageRangeId: selectedAgeRange.ageRangeId,
                         assessmentTypeId: viewModel.selectedAssessmentType

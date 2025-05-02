@@ -38,6 +38,11 @@ struct AssessmentChartView: View {
             }
         }
         .padding(.bottom, 40)
+        .refreshable {
+            Task {
+                await loadData()
+            }
+        }
         .onAppear {
             Task {
                 await loadData()
@@ -133,9 +138,24 @@ struct AssessmentChartView: View {
                 .frame(height: 300)
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("ประวัติการประเมิน:")
-                        .font(customFont(type: .bold, textStyle: .body))
-                        .foregroundColor(.jetblack)
+                    
+                    HStack {
+                        Text("ประวัติการประเมิน:")
+                            .font(customFont(type: .bold, textStyle: .body))
+                            .foregroundColor(.jetblack)
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            Task {
+                                await loadData()
+                            }
+                        }) {
+                            Image(systemName: "arrow.clockwise")
+                                .font(.system(size: 16))
+                                .foregroundColor(.jetblack)
+                        }
+                    }
                     
                     if questionResults.isEmpty {
                         EmptyView(message: "ไม่พบประวัติการประเมิน")
@@ -296,7 +316,7 @@ struct AssessmentChartView: View {
     private func loadData() async {
         isLoading = true
         
-        await viewModel.fetchAssessmentResults(
+        await viewModel.fetchAssessmentResultsIfNeeded(
             kidId: kidId,
             ageRangeId: ageRangeId,
             assessmentTypeId: assessmentTypeId

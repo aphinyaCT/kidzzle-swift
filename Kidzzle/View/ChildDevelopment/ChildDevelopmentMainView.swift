@@ -265,15 +265,12 @@ struct ChildDevelopmentMainView: View {
     }
     
     private func loadInitialData(forceRefresh: Bool = false) async {
-        // โหลดข้อมูลแม่ก่อน (และใช้ cache ถ้ามี)
         await motherViewModel.fetchMotherPregnant(forceRefresh: forceRefresh)
         
-        // โหลดข้อมูลเด็กเฉพาะที่จำเป็น
         for pregnancy in motherViewModel.sortedMotherPregnantData {
             await kidViewModel.fetchKidHistoryIfNeeded(pregnantId: pregnancy.id)
         }
-        
-        // โหลดข้อมูลการพัฒนา
+
         await developmentViewModel.loadCoreDataIfNeeded()
     }
     

@@ -170,7 +170,6 @@ struct ShowMotherPregnantView: View {
                 )
                 .onDisappear {
                     Task { @MainActor in
-                        // ใช้ fetchKidHistoryIfNeeded แทน fetchKidHistory
                         await kidViewModel.fetchKidHistoryIfNeeded(pregnantId: kidViewModel.pregnantId)
                         kidViewModel.resetKidHistoryFields()
                     }
