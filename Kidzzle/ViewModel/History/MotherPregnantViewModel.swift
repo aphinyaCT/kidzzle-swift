@@ -2,6 +2,8 @@
 //  MotherPregnantViewModel.swift
 //  Kidzzle
 //
+//  Created by aynnipa on 3/5/2568 BE.
+//
 
 import SwiftUI
 import Combine
@@ -9,7 +11,7 @@ import Combine
 class MotherPregnantViewModel: ObservableObject {
     // MARK: - Published Properties
     @Published var isLoading = false
-    @Published var error: MotherPregnantError?
+    @Published var error: APIError?
     @Published var successMessage: String?
     
     // Form Data
@@ -66,7 +68,7 @@ class MotherPregnantViewModel: ObservableObject {
         let accessToken = authViewModel.accessToken
         
         guard !accessToken.isEmpty else {
-            error = MotherPregnantError.serverError(message: "ไม่พบ Access Token")
+            error = APIError.serverError(message: "ไม่พบ Access Token")
             print("❌ Missing access token")
             return
         }
@@ -76,7 +78,7 @@ class MotherPregnantViewModel: ObservableObject {
         successMessage = nil
         
         guard !motherName.isEmpty, !motherBirthday.isEmpty else {
-            error = MotherPregnantError.serverError(message: "กรุณาระบุชื่อและวันเกิดของมารดา")
+            error = APIError.serverError(message: "กรุณาระบุชื่อและวันเกิดของมารดา")
             print("❌ Missing required data")
             isLoading = false
             return
@@ -103,7 +105,7 @@ class MotherPregnantViewModel: ObservableObject {
             await fetchMotherPregnant()
             print("✅ Successfully created mother pregnant record")
             
-        } catch let error as MotherPregnantError {
+        } catch let error as APIError {
             await MainActor.run {
                 self.error = error
                 self.isLoading = false
@@ -111,15 +113,13 @@ class MotherPregnantViewModel: ObservableObject {
             print("❌ Error creating mother pregnant: \(error.localizedDescription)")
         } catch {
             await MainActor.run {
-                self.error = MotherPregnantError.networkError
+                self.error = APIError.networkError
                 self.isLoading = false
             }
             print("❌ Unknown error: \(error.localizedDescription)")
         }
     }
     
-    // แก้ไขฟังก์ชัน fetchMotherPregnant ในไฟล์ MotherPregnantViewModel.swift
-
     // MARK: - API Methods
     @MainActor
     func fetchMotherPregnant(forceRefresh: Bool = false) async {
@@ -139,7 +139,7 @@ class MotherPregnantViewModel: ObservableObject {
         let accessToken = authViewModel.accessToken
         
         guard !accessToken.isEmpty else {
-            error = MotherPregnantError.serverError(message: "ไม่พบ Access Token")
+            error = APIError.serverError(message: "ไม่พบ Access Token")
             print("❌ Missing access token")
             return
         }
@@ -156,7 +156,7 @@ class MotherPregnantViewModel: ObservableObject {
             }
             
             print("✅ Successfully fetched mother pregnant data: \(response.count) records")
-        } catch let error as MotherPregnantError {
+        } catch let error as APIError {
             withAnimation {
                 self.error = error
                 self.isLoading = false
@@ -169,7 +169,7 @@ class MotherPregnantViewModel: ObservableObject {
             print("❌ Error fetching mother pregnant data: \(error.localizedDescription)")
         } catch {
             withAnimation {
-                self.error = MotherPregnantError.networkError
+                self.error = APIError.networkError
                 self.isLoading = false
             }
             print("❌ Unknown error: \(error.localizedDescription)")
@@ -190,7 +190,7 @@ class MotherPregnantViewModel: ObservableObject {
         let accessToken = authViewModel.accessToken
         
         guard !accessToken.isEmpty else {
-            error = MotherPregnantError.serverError(message: "ไม่พบ Access Token")
+            error = APIError.serverError(message: "ไม่พบ Access Token")
             print("❌ Missing access token")
             return
         }
@@ -201,7 +201,7 @@ class MotherPregnantViewModel: ObservableObject {
         
         guard !motherName.isEmpty, !motherBirthday.isEmpty else {
             withAnimation {
-                error = MotherPregnantError.serverError(message: "กรุณาระบุชื่อและวันเกิดของมารดา")
+                error = APIError.serverError(message: "กรุณาระบุชื่อและวันเกิดของมารดา")
                 isLoading = false
             }
             print("❌ Missing required data")
@@ -234,7 +234,7 @@ class MotherPregnantViewModel: ObservableObject {
             await fetchMotherPregnant()
             print("✅ Successfully updated mother pregnant data")
             
-        } catch let error as MotherPregnantError {
+        } catch let error as APIError {
             withAnimation {
                 self.error = error
                 self.isLoading = false
@@ -242,7 +242,7 @@ class MotherPregnantViewModel: ObservableObject {
             print("❌ Error updating mother pregnant: \(error.localizedDescription)")
         } catch {
             withAnimation {
-                self.error = MotherPregnantError.networkError
+                self.error = APIError.networkError
                 self.isLoading = false
             }
             print("❌ Unknown error: \(error.localizedDescription)")
@@ -256,7 +256,7 @@ class MotherPregnantViewModel: ObservableObject {
         let accessToken = authViewModel.accessToken
         
         guard !accessToken.isEmpty else {
-            error = MotherPregnantError.serverError(message: "ไม่พบ Access Token")
+            error = APIError.serverError(message: "ไม่พบ Access Token")
             print("❌ Missing access token")
             return
         }
@@ -283,7 +283,7 @@ class MotherPregnantViewModel: ObservableObject {
             await fetchMotherPregnant()
             print("✅ Successfully deleted mother pregnant data")
             
-        } catch let error as MotherPregnantError {
+        } catch let error as APIError {
             withAnimation {
                 self.error = error
                 self.isLoading = false
@@ -291,7 +291,7 @@ class MotherPregnantViewModel: ObservableObject {
             print("❌ Error deleting mother pregnant: \(error.localizedDescription)")
         } catch {
             withAnimation {
-                self.error = MotherPregnantError.networkError
+                self.error = APIError.networkError
                 self.isLoading = false
             }
             print("❌ Unknown error: \(error.localizedDescription)")

@@ -128,15 +128,13 @@ struct MotherPregnantView: View {
     }
     
     // MARK: - Create and Update Functions
-    // Replace only this function in MotherPregnantView.swift
 
     private func createMotherPregnant() async {
-        // Use Gregorian calendar with yyyy-MM-dd format specifically for the server
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        dateFormatter.calendar = Calendar(identifier: .gregorian) // Force Gregorian calendar
+        dateFormatter.calendar = Calendar(identifier: .gregorian)
         
-        // Format the date
         let formattedBirthday = dateFormatter.string(from: viewModel.motherBirthday)
         
         await viewModel.createMotherPregnant(
@@ -149,19 +147,18 @@ struct MotherPregnantView: View {
         
         if viewModel.successMessage != nil {
             Task { @MainActor in
-                try? await Task.sleep(nanoseconds: 100_000_000) // delay 100ms
+                try? await Task.sleep(nanoseconds: 100_000_000)
                 dismiss()
             }
         }
     }
 
     private func updateMotherPregnant() async {
-        // Use Gregorian calendar with yyyy-MM-dd format specifically for the server
+
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        dateFormatter.calendar = Calendar(identifier: .gregorian) // Force Gregorian calendar
-        
-        // Format the date
+        dateFormatter.calendar = Calendar(identifier: .gregorian)
+
         let formattedBirthday = dateFormatter.string(from: viewModel.motherBirthday)
         
         await viewModel.updateMotherPregnant(

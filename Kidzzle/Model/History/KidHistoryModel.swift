@@ -30,16 +30,6 @@ struct CreateKidHistoryResponse: Codable {
 struct KidHistoryResponse: Codable {
     let data: [KidHistoryData]
     
-    init(from decoder: Decoder) throws {
-        if let container = try? decoder.singleValueContainer(),
-           let dataArray = try? container.decode([KidHistoryData].self) {
-            self.data = dataArray
-        } else {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            self.data = try container.decode([KidHistoryData].self, forKey: .data)
-        }
-    }
-    
     enum CodingKeys: String, CodingKey {
         case data
     }
@@ -75,24 +65,6 @@ struct KidHistoryData: Codable, Identifiable {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
     }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        id = try container.decode(String.self, forKey: .id)
-        kidName = try container.decodeIfPresent(String.self, forKey: .kidName)
-        kidBirthday = try container.decodeIfPresent(String.self, forKey: .kidBirthday)
-        kidGender = try container.decodeIfPresent(String.self, forKey: .kidGender)
-        kidBirthWeight = try container.decodeIfPresent(String.self, forKey: .kidBirthWeight)
-        kidBodyLength = try container.decodeIfPresent(String.self, forKey: .kidBodyLength)
-        kidBloodType = try container.decodeIfPresent(String.self, forKey: .kidBloodType)
-        kidCongenitalDisease = try container.decodeIfPresent(String.self, forKey: .kidCongenitalDisease)
-        kidOxygen = try container.decodeIfPresent(String.self, forKey: .kidOxygen)
-        kidGestationalAge = try container.decodeIfPresent(String.self, forKey: .kidGestationalAge)
-        pregnantId = try container.decodeIfPresent(String.self, forKey: .pregnantId)
-        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
-        updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-    }
 }
 
 struct UpdateKidHistoryRequest: Codable {
@@ -108,31 +80,4 @@ struct UpdateKidHistoryRequest: Codable {
     let kid_name: String?
     let kid_oxygen: String?
     let pregnantId: String?
-}
-
-// MARK: Error
-enum KidHistoryError: Error, LocalizedError {
-    case invalidURL
-    case invalidResponse
-    case networkError
-    case decodingError
-    case serverError(message: String)
-    case unknownError
-    
-    var errorDescription: String? {
-        switch self {
-        case .invalidURL:
-            return "URL ไม่ถูกต้อง"
-        case .invalidResponse:
-            return "การตอบกลับจากเซิร์ฟเวอร์ไม่ถูกต้อง"
-        case .networkError:
-            return "เกิดปัญหาในการเชื่อมต่อเครือข่าย"
-        case .decodingError:
-            return "ไม่สามารถอ่านข้อมูลที่ได้รับจากเซิร์ฟเวอร์"
-        case .serverError(let message):
-            return "ข้อผิดพลาดจากเซิร์ฟเวอร์: \(message)"
-        case .unknownError:
-            return "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ"
-        }
-    }
 }

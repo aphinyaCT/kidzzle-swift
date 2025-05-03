@@ -86,7 +86,6 @@ struct ChildDevelopmentMainView: View {
             .frame(maxWidth: .infinity, alignment: .center)
             .onAppear {
                 Task {
-                    // โหลดข้อมูลเริ่มต้นโดยใช้ cache
                     await loadInitialData(forceRefresh: false)
                 }
             }
@@ -102,7 +101,6 @@ struct ChildDevelopmentMainView: View {
             }
             .fullScreenCover(isPresented: $developmentViewModel.showQuestionsSheet, onDismiss: {
                 developmentViewModel.clearTrainingData()
-                // ไม่จำเป็นต้องโหลดข้อมูลใหม่ทุกครั้ง
                 developmentViewModel.showAgeRangesSheet = true
             }) {
                 CustomQuestionsListView(
@@ -110,7 +108,6 @@ struct ChildDevelopmentMainView: View {
                     ageRange: developmentViewModel.selectedAgeRange!,
                     onQuestionSelected: handleQuestionSelection,
                     onDismiss: {
-                        // เก็บข้อมูลไว้ใช้ต่อ ไม่ต้องโหลดใหม่
                         developmentViewModel.showQuestionsSheet = false
                     }
                 )
@@ -241,7 +238,6 @@ struct ChildDevelopmentMainView: View {
                             EmptyView(message: "ยังไม่มีการบันทึกข้อมูลเด็ก\nสามารถเพิ่มข้อมูลได้ที่เมนู 'บันทึกประวัติ'")
                                 .frame(maxWidth: .infinity, alignment: .center)
                                 .onAppear {
-                                    // เมื่อแสดง EmptyView ให้ตรวจสอบว่าต้องโหลดข้อมูลหรือไม่
                                     Task {
                                         await kidViewModel.fetchKidHistoryIfNeeded(pregnantId: pregnant.id)
                                     }

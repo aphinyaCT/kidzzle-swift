@@ -28,10 +28,6 @@ class ChildDevelopmentAPIService {
             let jsonData = try encoder.encode(request)
             urlRequest.httpBody = jsonData
             
-            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                print("✅ Request Body: \(jsonString)")
-            }
-            
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             
             guard let httpResponse = response as? HTTPURLResponse else {
@@ -97,19 +93,12 @@ class ChildDevelopmentAPIService {
             }
             
             print("✅ Response Status Code: \(httpResponse.statusCode)")
-            
-            if let responseString = String(data: data, encoding: .utf8) {
-                print("✅ Response Body: \(responseString)")
-            }
-            
+
             switch httpResponse.statusCode {
             case 200...299:
                 let decoder = JSONDecoder()
                 
                 do {
-                    if let jsonString = String(data: data, encoding: .utf8) {
-                        print("🔍 Raw JSON for decoding: \(jsonString)")
-                    }
                     
                     return try decoder.decode([AgeRangeData].self, from: data)
                     
@@ -155,9 +144,7 @@ class ChildDevelopmentAPIService {
         guard let url = urlComponents?.url ?? URL(string: "\(baseURL)/assessments/\(assessmentType)/question/") else {
             throw APIError.invalidURL
         }
-        
-        print("🌐 กำลังเรียก API URL: \(url.absoluteString)")
-        
+
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "GET"
         urlRequest.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -171,24 +158,17 @@ class ChildDevelopmentAPIService {
             
             print("✅ Response Status Code: \(httpResponse.statusCode)")
             
-            if let responseString = String(data: data, encoding: .utf8) {
-                print("✅ Response Body Preview: \(responseString.prefix(300))...")
-            }
-            
             switch httpResponse.statusCode {
             case 200...299:
                 let decoder = JSONDecoder()
                 
                 do {
-                    // ตรวจสอบข้อมูล JSON ก่อนแปลง
                     if let jsonArray = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] {
                         print("📊 จำนวนข้อมูล JSON: \(jsonArray.count) รายการ")
-                        
-                        // แสดงตัวอย่างข้อมูลแรก
+
                         if let firstItem = jsonArray.first {
                             print("🔍 ข้อมูล keys ในรายการแรก: \(Array(firstItem.keys))")
-                            
-                            // ตรวจสอบค่า age_range_id
+
                             if let ageRangeIdValue = firstItem["age_range_id"] as? String {
                                 print("👉 ค่า age_range_id ในข้อมูลแรก: \(ageRangeIdValue)")
                             }
@@ -234,7 +214,7 @@ class ChildDevelopmentAPIService {
         assessmentQuestionId: String,
         accessToken: String
     ) async throws -> [DevelopmentTrainingData] {
-        // URL construction remains the same
+        
         guard let url = URL(string: "\(baseURL)/assessments/\(assessmentType)/training") else {
             throw APIError.invalidURL
         }
@@ -247,8 +227,6 @@ class ChildDevelopmentAPIService {
         guard let finalURL = urlComponents?.url else {
             throw APIError.invalidURL
         }
-        
-        print("🌐 กำลังเรียก API URL: \(finalURL.absoluteString)")
         
         var urlRequest = URLRequest(url: finalURL)
         urlRequest.httpMethod = "GET"
@@ -263,35 +241,22 @@ class ChildDevelopmentAPIService {
             }
             
             print("✅ Response Status Code: \(httpResponse.statusCode)")
-            
-            // Detailed logging of response
-            if let responseString = String(data: data, encoding: .utf8) {
-                print("📄 Response Body Preview: \(responseString.prefix(500))...")
-            }
-            
+
             switch httpResponse.statusCode {
             case 200...299:
                 let decoder = JSONDecoder()
                 
                 do {
-                    // Use top-level decoding to get more context
                     let result = try decoder.decode([DevelopmentTrainingData].self, from: data)
                     print("✅ แปลงข้อมูลสำเร็จ \(result.count) รายการ")
                     return result
                     
                 } catch {
-                    // Detailed error logging
                     print("❌ Decode Error Details:")
                     print("Error Type: \(type(of: error))")
                     print("Error: \(error)")
                     print("Error Description: \(error.localizedDescription)")
-                    
-                    // Try to print raw JSON for debugging
-                    if let jsonString = String(data: data, encoding: .utf8) {
-                        print("🔍 Raw JSON for debugging:")
-                        print(jsonString)
-                    }
-                    
+
                     throw APIError.serverError(message: "ไม่สามารถอ่านข้อมูลที่ได้รับจากเซิร์ฟเวอร์ได้")
                 }
                 
@@ -328,9 +293,7 @@ class ChildDevelopmentAPIService {
         guard let url = URL(string: "\(baseURL)/assessments/\(kidId)/\(ageRangeId)/\(assessmentTypeId)/result") else {
             throw APIError.invalidURL
         }
-        
-        print("🌐 กำลังเรียก API URL: \(url.absoluteString)")
-        
+
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "GET"
         urlRequest.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -344,10 +307,6 @@ class ChildDevelopmentAPIService {
             }
             
             print("✅ Response Status Code: \(httpResponse.statusCode)")
-            
-            if let responseString = String(data: data, encoding: .utf8) {
-                print("📄 Response Body Preview: \(responseString.prefix(500))...")
-            }
             
             switch httpResponse.statusCode {
             case 200...299:
@@ -363,12 +322,7 @@ class ChildDevelopmentAPIService {
                     print("Error Type: \(type(of: error))")
                     print("Error: \(error)")
                     print("Error Description: \(error.localizedDescription)")
-                    
-                    if let jsonString = String(data: data, encoding: .utf8) {
-                        print("🔍 Raw JSON for debugging:")
-                        print(jsonString)
-                    }
-                    
+
                     throw APIError.serverError(message: "ไม่สามารถอ่านข้อมูลที่ได้รับจากเซิร์ฟเวอร์ได้")
                 }
                 

@@ -32,7 +32,6 @@ struct ShowMotherPregnantView: View {
     
     @State private var refreshID = UUID()
     
-    // อัปเดต initializer
     init(motherViewModel: MotherPregnantViewModel, selectedPregnant: MotherPregnantData, authViewModel: AuthViewModel, kidViewModel: KidHistoryViewModel) {
         self.motherViewModel = motherViewModel
         self._selectedPregnant = State(initialValue: selectedPregnant)
@@ -120,7 +119,6 @@ struct ShowMotherPregnantView: View {
                 
                 kidViewModel.pregnantId = selectedPregnant.id
                 Task {
-                    // ใช้ fetchKidHistoryIfNeeded แทน fetchKidHistory เพื่อลดการเรียก API ซ้ำ
                     await kidViewModel.fetchKidHistoryIfNeeded(pregnantId: kidViewModel.pregnantId)
                 }
             }
@@ -131,7 +129,6 @@ struct ShowMotherPregnantView: View {
                 Task { @MainActor in
                     try? await Task.sleep(nanoseconds: 300_000_000)
                     
-                    // ทำรีเฟรชเฉพาะเมื่อจำเป็น
                     await motherViewModel.fetchMotherPregnant(forceRefresh: true)
                     
                     if let updatedPregnant = motherViewModel.motherPregnantDataList.first(where: { $0.id == selectedPregnant.id }) {
@@ -189,8 +186,7 @@ struct ShowMotherPregnantView: View {
             }
         }
     }
-    
-    // MARK: - API Call Functions
+
     private func deleteMotherPregnant() async {
         await motherViewModel.deleteMotherPregnant(id: selectedPregnant.id)
         
@@ -199,7 +195,6 @@ struct ShowMotherPregnantView: View {
         }
     }
     
-    // MARK: - View Components
     private var smallHeader: some View {
         VStack {
             HStack(spacing: 16) {
@@ -376,150 +371,4 @@ struct ShowMotherPregnantView: View {
     }
 }
 
-// MARK: - Mother Detail View
-struct MotherDetailView: View {
-    let selectedPregnant: MotherPregnantData
-    @Environment(\.dismiss) private var dismiss
-    
-    var body: some View {
-        ZStack(alignment: .topLeading) {
-            Color.ivorywhite
-                .ignoresSafeArea()
-            
-            VStack(alignment: .leading, spacing: 24) {
-                
-                Button(action: {
-                    dismiss()
-                }) {
-                    Image(systemName: "chevron.backward")
-                        .font(.system(size: 20, weight: .medium))
-                        .foregroundColor(.jetblack)
-                        .frame(width: 36, height: 36)
-                        .background(Color.white)
-                        .cornerRadius(10)
-                        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-                }
-                .padding(.top, 40)
-                
-                // Title
-                Text("ประวัติการตั้งครรภ์มารดา")
-                    .font(customFont(type: .bold, textStyle: .title2))
-                
-                VStack (alignment: .leading, spacing: 16) {
-                    HistoryLabelText(
-                        title: "ชื่อ-นามสกุล (มารดา)",
-                        value: selectedPregnant.motherName ?? "ไม่ระบุ",
-                        sfIcon: "person.fill"
-                    )
-                    
-                    HistoryLabelText(
-                        title: "วัน/เดือน/ปีเกิด (มารดา)",
-                        value: selectedPregnant.motherBirthday?.normalizeDateFormat() ?? "ไม่ระบุ",
-                        sfIcon: "birthday.cake.fill"
-                    )
-                    
-                    HistoryLabelText(
-                        title: "โรคประจำตัว",
-                        value: selectedPregnant.pregnantCongenitalDisease ?? "ไม่มี",
-                        sfIcon: "stethoscope"
-                    )
-                    
-                    HistoryLabelText(
-                        title: "ภาวะแทรกซ้อนระหว่างตั้งครรภ์",
-                        value: selectedPregnant.pregnantComplications ?? "ไม่มี",
-                        sfIcon: "exclamationmark.triangle.fill"
-                    )
-                    
-                    HistoryLabelText(
-                        title: "การสูบบุหรี่หรือดื่มแอลกอฮอล์ขณะตั้งครรภ์",
-                        value: selectedPregnant.pregnantDrugHistory ?? "ไม่มี",
-                        sfIcon: "pills.fill"
-                    )
-                    
-                    HistoryLabelText(
-                        title: "อ้างอิง",
-                        value: String(selectedPregnant.id.prefix(12)),
-                        sfIcon: "person.fill.checkmark"
-                    )
-                }
-            }
-            .padding(.horizontal, 20)
-        }
-    }
-}
 
-struct KidCardView: View {
-    let kid: KidHistoryData
-    let viewModel: KidHistoryViewModel
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("บุตร")
-                        .font(customFont(type: .medium, textStyle: .caption1))
-                        .padding(4)
-                        .padding(.horizontal, 8)
-                        .background(Color.sunYellow)
-                        .cornerRadius(10)
-                    
-                    Text(kid.kidName ?? "ไม่ทราบชื่อ")
-                        .font(customFont(type: .bold, textStyle: .body))
-                        .lineLimit(1)
-                        .foregroundColor(.jetblack)
-                }
-                
-                Spacer()
-                
-                Image(systemName: "arrow.up.forward")
-                    .font(.system(size: 24))
-                    .foregroundColor(.jetblack)
-                    .padding()
-                    .frame(width: 40, height: 40)
-                    .background(Color.sunYellow)
-                    .cornerRadius(10)
-            }
-            
-            HStack {
-                Image(systemName: "birthday.cake.fill")
-                    .font(.system(size: 16))
-                    .foregroundColor(.jetblack)
-                
-                Text(AgeHelper.formatAge(from: kid.kidBirthday))
-                    .font(customFont(type: .regular, textStyle: .footnote))
-            }
-            
-            HStack (spacing: 24) {
-                HStack {
-                    Image(systemName: "clock")
-                        .font(.system(size: 16))
-                        .foregroundColor(.jetblack)
-                    
-                    let gestationalResult = viewModel.evaluateGestationalDeliveryStatus(kid.kidGestationalAge ?? "ไม่ระบุ")
-                    Text(gestationalResult.status)
-                        .font(customFont(type: .regular, textStyle: .footnote))
-                        .foregroundColor(gestationalResult.color)
-                }
-                
-                HStack {
-                    Image(systemName: "scalemass.fill")
-                        .font(.system(size: 16))
-                        .foregroundColor(.jetblack)
-                    
-                    let weightResult = viewModel.evaluateBirthWeightStatus(weightString: kid.kidBirthWeight ?? "ไม่ระบุ")
-                    Text(weightResult.status)
-                        .font(customFont(type: .regular, textStyle: .footnote))
-                        .foregroundColor(weightResult.color)
-                }
-            }
-        }
-        .padding()
-        .frame(maxWidth: .infinity)
-        .background(Color.white)
-        .cornerRadius(10)
-        .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(Color.sunYellow, lineWidth: 1)
-        )
-    }
-}

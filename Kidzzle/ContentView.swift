@@ -63,6 +63,7 @@ struct ContentView: View {
 struct MainTabView: View {
     @State private var selectedTab: Int = 0
     @Binding var isLoggedIn: Bool
+    @State private var hasLoaded = false
     
     @EnvironmentObject var authViewModel: AuthViewModel
     @ObservedObject var motherViewModel: MotherPregnantViewModel
@@ -94,13 +95,24 @@ struct MainTabView: View {
             
             CustomTabBarView(selectedIndex: $selectedTab)
         }
-        .onAppear {
-            Task {
-                await motherViewModel.fetchMotherPregnant()
-                
-                if !motherViewModel.motherPregnantDataList.isEmpty {
-                    selectedTab = 1
-                }
+        .task {
+            if !hasLoaded {
+                await loadData()
+                hasLoaded = true
+            }
+        }
+    }
+    
+    private func loadData() async {
+        await motherViewModel.fetchMotherPregnant()
+        
+        if !motherViewModel.motherPregnantDataList.isEmpty {
+            for pregnant in motherViewModel.motherPregnantDataList {
+                await kidViewModel.fetchKidHistoryIfNeeded(pregnantId: pregnant.id)
+            }
+            
+            await MainActor.run {
+                selectedTab = 1
             }
         }
     }

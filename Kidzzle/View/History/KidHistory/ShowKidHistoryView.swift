@@ -12,7 +12,6 @@ struct ShowKidHistoryView: View {
    @ObservedObject var viewModel: KidHistoryViewModel
    @ObservedObject var motherViewModel: MotherPregnantViewModel
    
-   // เปลี่ยนจาก let เป็น @State เพื่อให้สามารถอัปเดตได้
    @State private var selectedKid: KidHistoryData
    
    @EnvironmentObject var authViewModel: AuthViewModel
@@ -27,7 +26,6 @@ struct ShowKidHistoryView: View {
    
    @State private var refreshID = UUID()
    
-   // อัปเดต initializer
    init(viewModel: KidHistoryViewModel,
         motherViewModel: MotherPregnantViewModel,
         selectedKid: KidHistoryData,
@@ -50,10 +48,7 @@ struct ShowKidHistoryView: View {
                            // MARK: Edit
                            Button(action: {
                                Task { @MainActor in
-                                   // เตรียมข้อมูลสำหรับแก้ไข
                                    viewModel.prepareForUpdate(with: selectedKid)
-                                   
-                                   // เปิดหน้าแก้ไข
                                    showEditView = true
                                }
                            }) {
@@ -84,8 +79,7 @@ struct ShowKidHistoryView: View {
                            }
                        }
                        .frame(maxWidth: .infinity, alignment: .trailingLastTextBaseline)
-                       
-                       // Kid History Details
+
                        HistoryLabelText(
                            title: "ชื่อ-นามสกุล",
                            value: selectedKid.kidName ?? "ไม่ระบุ",
@@ -368,26 +362,3 @@ struct ShowKidHistoryView: View {
    }
 }
 
-struct HistoryLabelText: View {
-   let title: String
-   let value: String
-   var sfIcon: String
-
-   var body: some View {
-       VStack(alignment: .leading, spacing: 4) {
-           HStack(spacing: 6) {
-               Image(systemName: sfIcon)
-                   .font(.system(size: 16))
-                   .foregroundColor(.jetblack)
-
-               Text(title)
-                   .font(customFont(type: .bold, textStyle: .body))
-                   .foregroundColor(.jetblack)
-           }
-
-           Text(value)
-               .font(customFont(type: .regular, textStyle: .body))
-               .foregroundColor(.jetblack)
-       }
-   }
-}

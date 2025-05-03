@@ -14,7 +14,7 @@ class KidHistoryAPIService {
     func createKidHistory(request: CreateKidHistoryRequest, accessToken: String) async throws -> CreateKidHistoryResponse {
         
         guard let url = URL(string: "\(baseURL)/kids/create") else {
-            throw KidHistoryError.invalidURL
+            throw APIError.invalidURL
         }
         
         var urlRequest = URLRequest(url: url)
@@ -36,7 +36,7 @@ class KidHistoryAPIService {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw KidHistoryError.invalidResponse
+                throw APIError.invalidResponse
             }
             
             print("✅ Response Status Code: \(httpResponse.statusCode)")
@@ -73,26 +73,26 @@ class KidHistoryAPIService {
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 
                 if let errorResponse = try? decoder.decode(ErrorResponse.self, from: data) {
-                    throw KidHistoryError.serverError(message: errorResponse.message)
+                    throw APIError.serverError(message: errorResponse.message)
                 } else {
-                    throw KidHistoryError.serverError(message: "เกิดข้อผิดพลาดที่เซิร์ฟเวอร์")
+                    throw APIError.serverError(message: "เกิดข้อผิดพลาดที่เซิร์ฟเวอร์")
                 }
                 
             default:
-                throw KidHistoryError.invalidResponse
+                throw APIError.invalidResponse
             }
             
-        } catch let error as KidHistoryError {
+        } catch let error as APIError {
             throw error
         } catch {
             print("❌ Network Error: \(error)")
-            throw KidHistoryError.networkError
+            throw APIError.networkError
         }
     }
     
     func getKidHistory(accessToken: String, pregnantId: String) async throws -> [KidHistoryData] {
         guard let url = URL(string: "\(baseURL)/kids/\(pregnantId)") else {
-            throw KidHistoryError.invalidURL
+            throw APIError.invalidURL
         }
         
         var urlRequest = URLRequest(url: url)
@@ -103,7 +103,7 @@ class KidHistoryAPIService {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw KidHistoryError.invalidResponse
+                throw APIError.invalidResponse
             }
             
             print("✅ Response Status Code: \(httpResponse.statusCode)")
@@ -133,26 +133,26 @@ class KidHistoryAPIService {
                 return responseWrapper.data
                 
             case 404:
-                throw KidHistoryError.serverError(message: "ไม่พบข้อมูลประวัติลูกน้อย")
+                throw APIError.serverError(message: "ไม่พบข้อมูลประวัติลูกน้อย")
                 
             case 400...:
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 if let errorResponse = try? decoder.decode(ErrorResponse.self, from: data) {
-                    throw KidHistoryError.serverError(message: errorResponse.message)
+                    throw APIError.serverError(message: errorResponse.message)
                 } else {
-                    throw KidHistoryError.serverError(message: "เกิดข้อผิดพลาดที่เซิร์ฟเวอร์")
+                    throw APIError.serverError(message: "เกิดข้อผิดพลาดที่เซิร์ฟเวอร์")
                 }
                 
             default:
-                throw KidHistoryError.invalidResponse
+                throw APIError.invalidResponse
             }
             
-        } catch let error as KidHistoryError {
+        } catch let error as APIError {
             throw error
         } catch {
             print("❌ Network Error: \(error)")
-            throw KidHistoryError.networkError
+            throw APIError.networkError
         }
     }
     
@@ -162,7 +162,7 @@ class KidHistoryAPIService {
     ) async throws -> CreateKidHistoryResponse {
         
         guard let url = URL(string: "\(baseURL)/kids/\(request.kidId)") else {
-            throw KidHistoryError.invalidURL
+            throw APIError.invalidURL
         }
         
         var urlRequest = URLRequest(url: url)
@@ -185,7 +185,7 @@ class KidHistoryAPIService {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw KidHistoryError.invalidResponse
+                throw APIError.invalidResponse
             }
             
             print("📥 Response Status Code: \(httpResponse.statusCode)")
@@ -208,17 +208,19 @@ class KidHistoryAPIService {
             case 400...:
                 let decoder = JSONDecoder()
                 if let errorResponse = try? decoder.decode(ErrorResponse.self, from: data) {
-                    throw KidHistoryError.serverError(message: errorResponse.message)
+                    throw APIError.serverError(message: errorResponse.message)
                 } else {
-                    throw KidHistoryError.serverError(message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูล")
+                    throw APIError.serverError(message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูล")
                 }
                 
             default:
-                throw KidHistoryError.invalidResponse
+                throw APIError.invalidResponse
             }
+        } catch let error as APIError {
+            throw error
         } catch {
             print("❌ Full Error Details: \(error)")
-            throw KidHistoryError.networkError
+            throw APIError.networkError
         }
     }
 
@@ -228,7 +230,7 @@ class KidHistoryAPIService {
         accessToken: String
     ) async throws -> CreateKidHistoryResponse {
         guard let url = URL(string: "\(baseURL)/kids/\(id)") else {
-            throw KidHistoryError.invalidURL
+            throw APIError.invalidURL
         }
         
         var urlRequest = URLRequest(url: url)
@@ -239,7 +241,7 @@ class KidHistoryAPIService {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw KidHistoryError.invalidResponse
+                throw APIError.invalidResponse
             }
             
             if let responseString = String(data: data, encoding: .utf8) {
@@ -262,16 +264,18 @@ class KidHistoryAPIService {
             case 400...:
                 let decoder = JSONDecoder()
                 if let errorResponse = try? decoder.decode(ErrorResponse.self, from: data) {
-                    throw KidHistoryError.serverError(message: errorResponse.message)
+                    throw APIError.serverError(message: errorResponse.message)
                 } else {
-                    throw KidHistoryError.serverError(message: "เกิดข้อผิดพลาดในการลบข้อมูล")
+                    throw APIError.serverError(message: "เกิดข้อผิดพลาดในการลบข้อมูล")
                 }
                 
             default:
-                throw KidHistoryError.invalidResponse
+                throw APIError.invalidResponse
             }
+        } catch let error as APIError {
+            throw error
         } catch {
-            throw KidHistoryError.networkError
+            throw APIError.networkError
         }
     }
 }

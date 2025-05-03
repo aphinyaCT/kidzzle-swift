@@ -355,27 +355,23 @@ class ChildDevelopmentViewModel: ObservableObject {
             return
         }
         
-        guard let selectedQuestion = assessmentQuestions.first(where: { $0.assessmentQuestionId == questionId }) else {
+        guard assessmentQuestions.first(where: { $0.assessmentQuestionId == questionId }) != nil else {
             errorMessage = "ไม่พบข้อมูลคำถามที่เลือก"
-            print("❌ ไม่พบข้อมูลคำถามสำหรับ questionId: \(questionId)")
+            print("❌ ไม่พบข้อมูลคำถาม")
             return
         }
-        
-        print("🔍 กำลังค้นหาข้อมูลการฝึกทักษะสำหรับคำถาม: '\(selectedQuestion.questionText)' (ID: \(questionId))")
-        print("🔍 ประเภทการประเมิน: '\(selectedAssessmentType)'")
         
         isLoading = true
         errorMessage = nil
         
         do {
-            // ดึงข้อมูลการฝึกทักษะทั้งหมด
             let allTrainings = try await apiService.getDevelopmentTrainings(
                 assessmentType: selectedAssessmentType,
                 assessmentQuestionId: questionId,
                 accessToken: accessToken
             )
             
-            print("✅ จำนวนข้อมูลการฝึกทักษะทั้งหมดจาก API: \(allTrainings.count) รายการ")
+            print("✅ จำนวนข้อมูลการฝึกทักษะทั้งหมด: \(allTrainings.count) รายการ")
             
             let filteredTrainings = allTrainings.filter { training in
                 let typeMatches = training.assessmentTypeId.isEmpty || training.assessmentTypeId == selectedAssessmentType
@@ -387,20 +383,19 @@ class ChildDevelopmentViewModel: ObservableObject {
             print("✅ จำนวนข้อมูลการฝึกทักษะหลังการกรอง: \(filteredTrainings.count) รายการ")
             
             if filteredTrainings.isEmpty {
-                print("⚠️ ไม่พบข้อมูลการฝึกทักษะที่ตรงกับเงื่อนไขการกรอง ใช้ข้อมูลทั้งหมดแทน")
+                print("⚠️ ไม่พบข้อมูลการฝึกทักษะที่ตรงกับเงื่อนไข")
                 developmentTrainings = allTrainings
             } else {
                 developmentTrainings = filteredTrainings
             }
             
-            // บันทึกเวลาล่าสุดที่โหลดข้อมูล
             lastFetchTimeMap[cacheKey] = Date()
         } catch let error as APIError {
             errorMessage = error.localizedDescription
             print("❌ API Error: \(error.localizedDescription)")
             developmentTrainings = []
         } catch {
-            errorMessage = "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ: \(error.localizedDescription)"
+            errorMessage = "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ"
             print("❌ Unknown Error: \(error.localizedDescription)")
             developmentTrainings = []
         }
@@ -416,13 +411,11 @@ class ChildDevelopmentViewModel: ObservableObject {
         (lastFetchTimeMap[cacheKey] != nil &&
          Date().timeIntervalSince(lastFetchTimeMap[cacheKey]!) > cacheTimeout)
         
-#if DEBUG
         if shouldRefresh {
             print("📡 FETCHING development trainings (questionId: \(questionId))")
         } else {
             print("💾 USING CACHED development trainings (last updated: \(lastFetchTimeMap[cacheKey]?.formatted() ?? "unknown"))")
         }
-#endif
         
         if shouldRefresh {
             await fetchDevelopmentTrainings(questionId: questionId)
@@ -433,7 +426,6 @@ class ChildDevelopmentViewModel: ObservableObject {
     func fetchAssessmentResults(kidId: String, ageRangeId: String, assessmentTypeId: String) async {
         let cacheKey = "results_\(kidId)_\(ageRangeId)_\(assessmentTypeId)"
         
-        // ตรวจสอบว่ามีข้อมูลที่ตรงกับเงื่อนไขแล้วหรือไม่
         let hasFilteredResults = assessmentResults.contains {
             $0.kidId == kidId &&
             $0.ageRangeId == ageRangeId &&
@@ -451,7 +443,6 @@ class ChildDevelopmentViewModel: ObservableObject {
             print("💾 USING CACHED assessment results (last updated: \(lastFetchTimeMap[cacheKey]?.formatted() ?? "unknown"))")
         }
 
-        // ถ้าไม่จำเป็นต้องโหลดข้อมูลใหม่
         if !shouldRefresh {
             return
         }
@@ -570,7 +561,6 @@ class ChildDevelopmentViewModel: ObservableObject {
     }
     
     // MARK: - UI Flow Control
-    
     func handleAgeRangeSelection(_ ageRange: AgeRangeData) {
         selectAgeRange(ageRange)
         
@@ -583,7 +573,7 @@ class ChildDevelopmentViewModel: ObservableObject {
             }
         }
     }
-    
+
     func handleQuestionSelection(_ question: AssessmentQuestionData) {
         selectQuestion(question)
         
@@ -596,14 +586,14 @@ class ChildDevelopmentViewModel: ObservableObject {
             }
         }
     }
-    
+
     func handleAssessmentTypeSelection(kidId: String, assessmentType: String) {
         setSelectedKid(kidId: kidId)
         selectAssessmentType(assessmentType)
         
         Task {
             await fetchAgeRangesIfNeeded()
-            
+
             await MainActor.run {
                 showAgeRangesSheet = true
             }
@@ -624,7 +614,6 @@ class ChildDevelopmentViewModel: ObservableObject {
         
         if success {
             if let selectedAgeRange = selectedAgeRange {
-                // เมื่อสร้างการประเมินสำเร็จ ให้ล้าง cache และโหลดข้อมูลใหม่
                 let cacheKey = "results_\(kidId)_\(selectedAgeRange.ageRangeId)_\(selectedAssessmentType)"
                 lastFetchTimeMap[cacheKey] = nil
                 
@@ -776,7 +765,7 @@ class ChildDevelopmentViewModel: ObservableObject {
     // MARK: - Data Caching & Optimization
     @MainActor
     func loadCoreDataIfNeeded() async {
-        // ตรวจสอบว่าข้อมูลพื้นฐานได้โหลดแล้วหรือไม่
+        
         let cacheKey = "age_ranges_\(selectedAssessmentType)"
         let shouldRefresh = lastFetchTimeMap[cacheKey] == nil ||
         ageRanges.isEmpty ||
@@ -788,20 +777,13 @@ class ChildDevelopmentViewModel: ObservableObject {
         } else {
             print("✅ Using cached development data")
         }
-        
-        // ถ้าไม่จำเป็นต้องโหลดข้อมูลใหม่
+
         if !shouldRefresh && !ageRanges.isEmpty {
             return
         }
         
-        // โหลดข้อมูลพื้นฐานที่จำเป็น
         if ageRanges.isEmpty {
             await fetchAgeRanges()
-        }
-        
-        // ถ้ามี selected age range แล้ว ให้โหลดคำถามด้วย
-        if let selectedAgeRange = selectedAgeRange, assessmentQuestions.isEmpty {
-            await fetchAssessmentQuestionsIfNeeded(ageRangeId: selectedAgeRange.ageRangeId)
         }
     }
     

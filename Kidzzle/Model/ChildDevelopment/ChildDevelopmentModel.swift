@@ -67,50 +67,6 @@ struct AssessmentQuestionData: Codable {
         case passCriteria = "pass_criteria"
         case questionText = "question_text"
     }
-
-    init(from decoder: Decoder) throws {
-        do {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-
-            ageRangeId = try container.decode(String.self, forKey: .ageRangeId).trimmingCharacters(in: .whitespacesAndNewlines)
-            ageRangeName = try container.decode(String.self, forKey: .ageRangeName)
-            assessmentMethod = try container.decode(String.self, forKey: .assessmentMethod)
-            assessmentNo = try container.decode(String.self, forKey: .assessmentNo)
-            assessmentQuestionId = try container.decode(String.self, forKey: .assessmentQuestionId)
-
-            assessmentRequiredTool = try container.decodeIfPresent(String.self, forKey: .assessmentRequiredTool)
-            
-            assessmentTypeId = try container.decode(String.self, forKey: .assessmentTypeId)
-            assessmentTypeName = try container.decode(String.self, forKey: .assessmentTypeName)
-            devTypeId = try container.decode(String.self, forKey: .devTypeId)
-            developmentType = try container.decode(String.self, forKey: .developmentType)
-            passCriteria = try container.decode(String.self, forKey: .passCriteria)
-            questionText = try container.decode(String.self, forKey: .questionText)
-            
-        } catch {
-            print("❌ Error decoding AssessmentQuestionData: \(error)")
-            throw error
-        }
-    }
-
-    init(ageRangeId: String, ageRangeName: String, assessmentMethod: String, assessmentNo: String,
-         assessmentQuestionId: String, assessmentRequiredTool: String?, assessmentTypeId: String,
-         assessmentTypeName: String, devTypeId: String, developmentType: String,
-         passCriteria: String, questionText: String) {
-        
-        self.ageRangeId = ageRangeId
-        self.ageRangeName = ageRangeName
-        self.assessmentMethod = assessmentMethod
-        self.assessmentNo = assessmentNo
-        self.assessmentQuestionId = assessmentQuestionId
-        self.assessmentRequiredTool = assessmentRequiredTool
-        self.assessmentTypeId = assessmentTypeId
-        self.assessmentTypeName = assessmentTypeName
-        self.devTypeId = devTypeId
-        self.developmentType = developmentType
-        self.passCriteria = passCriteria
-        self.questionText = questionText
-    }
 }
 
 struct DevelopmentTrainingData: Codable {
@@ -128,17 +84,6 @@ struct DevelopmentTrainingData: Codable {
         case assessmentNo = "assessment_no"
         case trainingText = "training_text"
         case trainingRequiredTools = "training_required_tools"
-    }
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        trainingMethodsId = try container.decode(String.self, forKey: .trainingMethodsId)
-        assessmentQuestionId = try container.decode(String.self, forKey: .assessmentQuestionId)
-        assessmentTypeId = try container.decode(String.self, forKey: .assessmentTypeId)
-        assessmentNo = try container.decode(String.self, forKey: .assessmentNo)
-        trainingText = try container.decode(String.self, forKey: .trainingText)
-        trainingRequiredTools = try container.decodeIfPresent(String.self, forKey: .trainingRequiredTools)
     }
 }
 
@@ -159,25 +104,6 @@ struct AssessmentResult: Codable, Identifiable {
         case createdAt = "created_at"
         case isPassed = "is_passed"
         case kidId = "kid_id"
-    }
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
-        ageRangeId = try container.decode(String.self, forKey: .ageRangeId)
-        assessmentQuestionId = try container.decode(String.self, forKey: .assessmentQuestionId)
-        assessmentTypeId = try container.decode(String.self, forKey: .assessmentTypeId)
-        
-        let dateString = try container.decode(String.self, forKey: .createdAt)
-        let dateFormatter = ISO8601DateFormatter()
-        if let date = dateFormatter.date(from: dateString) {
-            createdAt = date
-        } else {
-            throw DecodingError.dataCorruptedError(forKey: .createdAt, in: container, debugDescription: "Invalid date format")
-        }
-        
-        isPassed = try container.decode(Bool.self, forKey: .isPassed)
-        kidId = try container.decode(String.self, forKey: .kidId)
     }
     
     var statusText: String {

@@ -2,6 +2,8 @@
 //  KidHistoryViewModel.swift
 //  Kidzzle
 //
+//  Created by aynnipa on 3/5/2568 BE.
+//
 
 import SwiftUI
 import Combine
@@ -9,7 +11,7 @@ import Combine
 class KidHistoryViewModel: ObservableObject {
     // MARK: - Published Properties
     @Published var isLoading = false
-    @Published var error: KidHistoryError?
+    @Published var error: APIError?
     @Published var successMessage: String?
     
     // Form Data
@@ -60,7 +62,7 @@ class KidHistoryViewModel: ObservableObject {
         
         let accessToken = authViewModel.accessToken
         guard !accessToken.isEmpty else {
-            error = KidHistoryError.serverError(message: "ไม่พบ Access Token")
+            error = APIError.serverError(message: "ไม่พบ Access Token")
             print("❌ Missing access token")
             isLoading = false
             return
@@ -69,7 +71,7 @@ class KidHistoryViewModel: ObservableObject {
         let finalPregnantId = !self.pregnantId.isEmpty ? self.pregnantId : motherViewModel.selectedPregnantId
         
         guard !finalPregnantId.isEmpty else {
-            error = KidHistoryError.serverError(message: "กรุณาเลือกประวัติการตั้งครรภ์ก่อน")
+            error = APIError.serverError(message: "กรุณาเลือกประวัติการตั้งครรภ์ก่อน")
             print("🚨 pregnantId is EMPTY")
             isLoading = false
             return
@@ -119,7 +121,7 @@ class KidHistoryViewModel: ObservableObject {
             await fetchKidHistory(pregnantId: pregnantId)
             print("✅ Successfully created kid history record")
             
-        } catch let error as KidHistoryError {
+        } catch let error as APIError {
             await MainActor.run {
                 self.error = error
                 self.isLoading = false
@@ -127,7 +129,7 @@ class KidHistoryViewModel: ObservableObject {
             print("❌ Error creating kid history: \(error.localizedDescription)")
         } catch {
             await MainActor.run {
-                self.error = KidHistoryError.networkError
+                self.error = APIError.networkError
                 self.isLoading = false
             }
             print("❌ Unknown error: \(error.localizedDescription)")
@@ -152,7 +154,7 @@ class KidHistoryViewModel: ObservableObject {
         let accessToken = authViewModel.accessToken
         
         guard !accessToken.isEmpty else {
-            error = KidHistoryError.serverError(message: "ไม่พบ Access Token")
+            error = APIError.serverError(message: "ไม่พบ Access Token")
             print("❌ Missing access token")
             return
         }
@@ -163,7 +165,7 @@ class KidHistoryViewModel: ObservableObject {
         
         guard !kidName.isEmpty, !birthDate.isEmpty else {
             withAnimation {
-                error = KidHistoryError.serverError(message: "กรุณาระบุชื่อและวันเกิดของเด็ก")
+                error = APIError.serverError(message: "กรุณาระบุชื่อและวันเกิดของเด็ก")
                 isLoading = false
             }
             print("❌ Missing required data")
@@ -201,7 +203,7 @@ class KidHistoryViewModel: ObservableObject {
             await fetchKidHistory(pregnantId: motherViewModel.selectedPregnantId)
             print("✅ Successfully updated kid history")
             
-        } catch let error as KidHistoryError {
+        } catch let error as APIError {
             withAnimation {
                 self.error = error
                 self.isLoading = false
@@ -209,7 +211,7 @@ class KidHistoryViewModel: ObservableObject {
             print("❌ Error updating kid history: \(error.localizedDescription)")
         } catch {
             withAnimation {
-                self.error = KidHistoryError.networkError
+                self.error = APIError.networkError
                 self.isLoading = false
             }
             print("❌ Unknown error: \(error.localizedDescription)")
@@ -235,13 +237,13 @@ class KidHistoryViewModel: ObservableObject {
 
         let accessToken = authViewModel.accessToken
         guard !accessToken.isEmpty else {
-            error = KidHistoryError.serverError(message: "ไม่พบ Access Token")
+            error = APIError.serverError(message: "ไม่พบ Access Token")
             print("❌ Missing access token")
             return
         }
 
         guard !pregnantId.isEmpty else {
-            error = KidHistoryError.serverError(message: "ไม่พบ pregnant_id")
+            error = APIError.serverError(message: "ไม่พบ pregnant_id")
             print("❌ No pregnant ID to fetch kid history")
             return
         }
@@ -261,7 +263,7 @@ class KidHistoryViewModel: ObservableObject {
             }
 
             print("✅ Successfully fetched \(response.count) kid history records")
-        } catch let error as KidHistoryError {
+        } catch let error as APIError {
             withAnimation {
                 self.error = error
                 self.isLoading = false
@@ -269,7 +271,7 @@ class KidHistoryViewModel: ObservableObject {
             print("❌ Error fetching kid history: \(error.localizedDescription)")
         } catch {
             withAnimation {
-                self.error = KidHistoryError.networkError
+                self.error = APIError.networkError
                 self.isLoading = false
             }
             print("❌ Unknown error: \(error.localizedDescription)")
@@ -282,7 +284,7 @@ class KidHistoryViewModel: ObservableObject {
         
         let accessToken = authViewModel.accessToken
         guard !accessToken.isEmpty else {
-            error = KidHistoryError.serverError(message: "ไม่พบ Access Token")
+            error = APIError.serverError(message: "ไม่พบ Access Token")
             print("❌ Missing access token")
             return
         }
@@ -310,7 +312,7 @@ class KidHistoryViewModel: ObservableObject {
             
             print("✅ Successfully deleted kid history")
             
-        } catch let error as KidHistoryError {
+        } catch let error as APIError {
             withAnimation {
                 self.error = error
                 self.isLoading = false
@@ -318,7 +320,7 @@ class KidHistoryViewModel: ObservableObject {
             print("❌ Error deleting kid history: \(error.localizedDescription)")
         } catch {
             withAnimation {
-                self.error = KidHistoryError.networkError
+                self.error = APIError.networkError
                 self.isLoading = false
             }
             print("❌ Unknown error: \(error.localizedDescription)")

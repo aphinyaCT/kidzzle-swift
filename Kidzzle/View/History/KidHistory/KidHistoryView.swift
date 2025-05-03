@@ -196,12 +196,11 @@ struct KidHistoryView: View {
     
     // MARK: - Create and Update Functions
     private func createKidHistory() async {
-        // Use Gregorian calendar with yyyy-MM-dd format specifically for the server
+
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        dateFormatter.calendar = Calendar(identifier: .gregorian) // Force Gregorian calendar
+        dateFormatter.calendar = Calendar(identifier: .gregorian)
         
-        // Format the date
         let formattedBirthday = dateFormatter.string(from: viewModel.kidBirthday)
         
         await viewModel.createKidHistory(
@@ -218,19 +217,18 @@ struct KidHistoryView: View {
         
         if viewModel.successMessage != nil {
             Task { @MainActor in
-                try? await Task.sleep(nanoseconds: 100_000_000) // delay 100ms
+                try? await Task.sleep(nanoseconds: 100_000_000)
                 dismiss()
             }
         }
     }
     
     private func updateKidHistory() async {
-        // Use Gregorian calendar with yyyy-MM-dd format specifically for the server
+
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        dateFormatter.calendar = Calendar(identifier: .gregorian) // Force Gregorian calendar
+        dateFormatter.calendar = Calendar(identifier: .gregorian)
         
-        // Format the date
         let formattedBirthday = dateFormatter.string(from: viewModel.kidBirthday)
         
         if let currentKidId = viewModel.currentKidId {
@@ -248,7 +246,7 @@ struct KidHistoryView: View {
             )
             
             if viewModel.successMessage != nil {
-                try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 วินาที
+                try? await Task.sleep(nanoseconds: 300_000_000)
                 
                 await viewModel.fetchKidHistory(pregnantId: viewModel.pregnantId)
                 
@@ -257,7 +255,7 @@ struct KidHistoryView: View {
                 }
             }
         } else {
-            viewModel.error = .serverError(message: "ไม่พบข้อมูลเด็กที่ต้องการแก้ไข")
+            viewModel.error = APIError.serverError(message: "ไม่พบรหัสข้อมูลลูกน้อยที่ต้องการแก้ไข")
         }
     }
     

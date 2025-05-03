@@ -14,7 +14,7 @@ class MotherPregnantAPIService {
     func createMotherPregnant(request: CreateMotherPregnantRequest, accessToken: String) async throws -> CreateMotherPregnantResponse{
         
         guard let url = URL(string: "\(baseURL)/mother-pregnants/create") else {
-            throw KidHistoryError.invalidURL
+            throw APIError.invalidURL
         }
         
         var urlRequest = URLRequest(url: url)
@@ -36,7 +36,7 @@ class MotherPregnantAPIService {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw MotherPregnantError.invalidResponse
+                throw APIError.invalidResponse
             }
             
             print("✅ Response Status Code: \(httpResponse.statusCode)")
@@ -73,26 +73,26 @@ class MotherPregnantAPIService {
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 
                 if let errorResponse = try? decoder.decode(ErrorResponse.self, from: data) {
-                    throw MotherPregnantError.serverError(message: errorResponse.message)
+                    throw APIError.serverError(message: errorResponse.message)
                 } else {
-                    throw MotherPregnantError.serverError(message: "เกิดข้อผิดพลาดที่เซิร์ฟเวอร์")
+                    throw APIError.serverError(message: "เกิดข้อผิดพลาดที่เซิร์ฟเวอร์")
                 }
                 
             default:
-                throw MotherPregnantError.invalidResponse
+                throw APIError.invalidResponse
             }
             
-        } catch let error as MotherPregnantError {
+        } catch let error as APIError {
             throw error
         } catch {
             print("❌ Network Error: \(error)")
-            throw MotherPregnantError.networkError
+            throw APIError.networkError
         }
     }
     
     func getMotherPregnant(accessToken: String) async throws -> [MotherPregnantData] {
         guard let url = URL(string: "\(baseURL)/mother-pregnants") else {
-            throw MotherPregnantError.invalidURL
+            throw APIError.invalidURL
         }
         
         var urlRequest = URLRequest(url: url)
@@ -103,7 +103,7 @@ class MotherPregnantAPIService {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw MotherPregnantError.invalidResponse
+                throw APIError.invalidResponse
             }
             
             print("✅ Response Status Code: \(httpResponse.statusCode)")
@@ -134,31 +134,31 @@ class MotherPregnantAPIService {
                     print("Error: \(error)")
                     print("Error Description: \(error.localizedDescription)")
                     
-                    throw MotherPregnantError.serverError(message: "ไม่สามารถอ่านข้อมูลที่ได้รับจากเซิร์ฟเวอร์ได้")
+                    throw APIError.serverError(message: "ไม่สามารถอ่านข้อมูลที่ได้รับจากเซิร์ฟเวอร์ได้")
                 }
                 
             case 404:
-                throw MotherPregnantError.serverError(message: "ไม่พบข้อมูลประวัติการตั้งครรภ์")
+                throw APIError.serverError(message: "ไม่พบข้อมูลประวัติการตั้งครรภ์")
                 
             case 400...:
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 
                 if let errorResponse = try? decoder.decode(ErrorResponse.self, from: data) {
-                    throw MotherPregnantError.serverError(message: errorResponse.message)
+                    throw APIError.serverError(message: errorResponse.message)
                 } else {
-                    throw MotherPregnantError.serverError(message: "เกิดข้อผิดพลาดที่เซิร์ฟเวอร์")
+                    throw APIError.serverError(message: "เกิดข้อผิดพลาดที่เซิร์ฟเวอร์")
                 }
                 
             default:
-                throw MotherPregnantError.invalidResponse
+                throw APIError.invalidResponse
             }
             
-        } catch let error as MotherPregnantError {
+        } catch let error as APIError {
             throw error
         } catch {
             print("❌ Network Error: \(error)")
-            throw MotherPregnantError.networkError
+            throw APIError.networkError
         }
     }
     
@@ -169,7 +169,7 @@ class MotherPregnantAPIService {
     ) async throws -> CreateMotherPregnantResponse {
         
         guard let url = URL(string: "\(baseURL)/mother-pregnants/\(pregnantId)") else {
-            throw KidHistoryError.invalidURL
+            throw APIError.invalidURL
         }
         
         var urlRequest = URLRequest(url: url)
@@ -192,7 +192,7 @@ class MotherPregnantAPIService {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw MotherPregnantError.invalidResponse
+                throw APIError.invalidResponse
             }
             
             print("📥 Response Status Code: \(httpResponse.statusCode)")
@@ -215,17 +215,19 @@ class MotherPregnantAPIService {
             case 400...:
                 let decoder = JSONDecoder()
                 if let errorResponse = try? decoder.decode(ErrorResponse.self, from: data) {
-                    throw MotherPregnantError.serverError(message: errorResponse.message)
+                    throw APIError.serverError(message: errorResponse.message)
                 } else {
-                    throw MotherPregnantError.serverError(message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูล")
+                    throw APIError.serverError(message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูล")
                 }
                 
             default:
-                throw MotherPregnantError.invalidResponse
+                throw APIError.invalidResponse
             }
+        } catch let error as APIError {
+            throw error
         } catch {
             print("❌ Full Error Details: \(error)")
-            throw MotherPregnantError.networkError
+            throw APIError.networkError
         }
     }
 
@@ -235,7 +237,7 @@ class MotherPregnantAPIService {
         accessToken: String
     ) async throws -> CreateMotherPregnantResponse {
         guard let url = URL(string: "\(baseURL)/mother-pregnants/\(id)") else {
-            throw MotherPregnantError.invalidURL
+            throw APIError.invalidURL
         }
         
         var urlRequest = URLRequest(url: url)
@@ -246,7 +248,7 @@ class MotherPregnantAPIService {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw MotherPregnantError.invalidResponse
+                throw APIError.invalidResponse
             }
             
             if let responseString = String(data: data, encoding: .utf8) {
@@ -269,16 +271,18 @@ class MotherPregnantAPIService {
             case 400...:
                 let decoder = JSONDecoder()
                 if let errorResponse = try? decoder.decode(ErrorResponse.self, from: data) {
-                    throw MotherPregnantError.serverError(message: errorResponse.message)
+                    throw APIError.serverError(message: errorResponse.message)
                 } else {
-                    throw MotherPregnantError.serverError(message: "เกิดข้อผิดพลาดในการลบข้อมูล")
+                    throw APIError.serverError(message: "เกิดข้อผิดพลาดในการลบข้อมูล")
                 }
                 
             default:
-                throw MotherPregnantError.invalidResponse
+                throw APIError.invalidResponse
             }
+        } catch let error as APIError {
+            throw error
         } catch {
-            throw MotherPregnantError.networkError
+            throw APIError.networkError
         }
     }
 }

@@ -1,20 +1,9 @@
-////
-////  KidzzleApp.swift
-////  Kidzzle
-////
-////  Created by aynnipa on 4/4/2568 BE.
-////
 //
-//import SwiftUI
+//  KidzzleApp.swift
+//  Kidzzle
 //
-//@main
-//struct KidzzleApp: App {
-//    var body: some Scene {
-//        WindowGroup {
-//            ContentView()
-//        }
-//    }
-//}
+//  Created by aynnipa on 4/4/2568 BE.
+//
 
 import SwiftUI
 import GoogleSignIn
