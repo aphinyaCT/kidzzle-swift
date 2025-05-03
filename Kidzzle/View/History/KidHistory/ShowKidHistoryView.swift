@@ -215,9 +215,11 @@ struct ShowKidHistoryView: View {
    
    // MARK: - API Call Functions
     private func deleteKidHistory() async {
-        await viewModel.deleteKidHistory(id: selectedKid.id)
-        await viewModel.fetchKidHistory(pregnantId: selectedKid.pregnantId ?? "ไม่พบ pregnat_id")
-
+        await viewModel.deleteAndRefreshKidHistory(
+            id: selectedKid.id,
+            pregnantId: selectedKid.pregnantId
+        )
+        
         dismiss()
     }
    
