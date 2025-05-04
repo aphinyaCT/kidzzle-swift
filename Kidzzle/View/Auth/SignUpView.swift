@@ -27,10 +27,10 @@ struct SignUpView: View {
                 }, label:{
                     Image(systemName: "arrow.left")
                         .font(.title2)
-                        .foregroundStyle(.jetblack)
+                        .foregroundStyle(.white)
                         .padding()
                         .frame(width: 40, height: 40)
-                        .background(Color.white)
+                        .background(Color.jetblack)
                         .cornerRadius(10)
                 })
                 .frame(maxWidth: .infinity, alignment: .leading)

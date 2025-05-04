@@ -15,7 +15,7 @@ struct MotherPregnantCardView: View {
         VStack(alignment: .leading, spacing: 24) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("มารดาและลูกน้อย")
+                    Text("มารดาและบุตร")
                         .font(customFont(type: .medium, textStyle: .caption1))
                         .padding(4)
                         .padding(.horizontal, 8)

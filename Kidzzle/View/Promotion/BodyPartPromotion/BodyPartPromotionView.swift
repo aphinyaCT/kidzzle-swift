@@ -64,9 +64,9 @@ struct BodyPartPromotionView: View {
                     isPresented.toggle()
                 }, label: {
                     Image(systemName: "chevron.backward")
-                        .foregroundColor(.jetblack)
+                        .foregroundColor(.white)
                         .frame(width: 40, height: 40)
-                        .background(Color.white)
+                        .background(Color.jetblack)
                         .cornerRadius(10)
                 })
                 .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)

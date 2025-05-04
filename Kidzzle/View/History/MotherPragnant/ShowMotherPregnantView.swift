@@ -49,7 +49,7 @@ struct ShowMotherPregnantView: View {
                         
                         VStack (alignment: .leading, spacing: 24) {
                             HStack {
-                                Text("ประวัติลูกน้อย")
+                                Text("ประวัติบุตร")
                                     .font(customFont(type: .bold, textStyle: .body))
                                 
                                 Spacer()
@@ -89,7 +89,7 @@ struct ShowMotherPregnantView: View {
                                     }
                                 }
                             } else {
-                                Text("กดปุ่ม '+' เพื่อสร้างประวัติลูกน้อย")
+                                Text("กดปุ่ม '+' เพื่อสร้างประวัติบุตร")
                                     .font(customFont(type: .regular, textStyle: .body))
                                     .foregroundColor(.gray)
                                     .frame(maxWidth: .infinity, alignment: .center)
@@ -205,9 +205,9 @@ struct ShowMotherPregnantView: View {
                         Image(systemName: "chevron.backward")
                             .font(.system(size: 24))
                             .frame(width: 24, height: 24)
-                            .foregroundColor(Color.jetblack)
+                            .foregroundColor(Color.white)
                             .padding(8)
-                            .background(Color.white)
+                            .background(Color.jetblack)
                             .cornerRadius(10)
                             .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
                     }
@@ -243,9 +243,9 @@ struct ShowMotherPregnantView: View {
                             Image(systemName: "chevron.backward")
                                 .font(.system(size: 24))
                                 .frame(width: 24, height: 24)
-                                .foregroundColor(Color.jetblack)
+                                .foregroundColor(Color.white)
                                 .padding(8)
-                                .background(Color.white)
+                                .background(Color.jetblack)
                                 .cornerRadius(10)
                                 .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
                         }

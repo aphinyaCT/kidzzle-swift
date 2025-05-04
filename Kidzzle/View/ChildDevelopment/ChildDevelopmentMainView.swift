@@ -12,7 +12,7 @@ import SDWebImageSwiftUI
 struct ChildDevelopmentMainView: View {
 
     @State var progress: CGFloat = 0
-
+    
     private let minHeight = 100.0
     private let maxHeight = 200.0
 
@@ -50,9 +50,9 @@ struct ChildDevelopmentMainView: View {
                         Color.clear.frame(height: 20)
 
                         VStack(alignment: .leading, spacing: 24) {
-
+                            
                             ManualCarouselView(manuals: manuals)
-
+                                
                             VStack (alignment: .leading, spacing: 10) {
                                 Text("การเฝ้าระวังและประเมินพัฒนาการ 5 ด้าน")
                                     .font(customFont(type: .bold, textStyle: .body))
@@ -156,9 +156,9 @@ struct ChildDevelopmentMainView: View {
                         Image(systemName: "rectangle.portrait.and.arrow.forward")
                             .font(.system(size: 16))
                             .frame(width: 24, height: 24)
-                            .foregroundColor(Color.jetblack)
+                            .foregroundColor(Color.white)
                             .padding(8)
-                            .background(Color.white)
+                            .background(Color.jetblack)
                             .cornerRadius(10)
                             .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
                     }
@@ -187,9 +187,9 @@ struct ChildDevelopmentMainView: View {
                         Image(systemName: "rectangle.portrait.and.arrow.forward")
                             .font(.system(size: 16))
                             .frame(width: 24, height: 24)
-                            .foregroundColor(Color.jetblack)
+                            .foregroundColor(Color.white)
                             .padding(8)
-                            .background(Color.white)
+                            .background(Color.jetblack)
                             .cornerRadius(10)
                             .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
                     }

@@ -126,7 +126,7 @@ class KidHistoryAPIService {
                 return responseWrapper.data
                 
             case 404:
-                throw APIError.serverError(message: "ไม่พบข้อมูลประวัติลูกน้อย")
+                throw APIError.serverError(message: "ไม่พบข้อมูลประวัติบุตร")
                 
             case 400...:
                 let decoder = JSONDecoder()

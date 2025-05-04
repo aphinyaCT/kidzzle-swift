@@ -255,7 +255,7 @@ struct KidHistoryView: View {
                 }
             }
         } else {
-            viewModel.error = APIError.serverError(message: "ไม่พบรหัสข้อมูลลูกน้อยที่ต้องการแก้ไข")
+            viewModel.error = APIError.serverError(message: "ไม่พบรหัสข้อมูลบุตรที่ต้องการแก้ไข")
         }
     }
     
@@ -269,14 +269,14 @@ struct KidHistoryView: View {
                         Image(systemName: "chevron.backward")
                             .font(.system(size: 16))
                             .frame(width: 24, height: 24)
-                            .foregroundColor(Color.jetblack)
+                            .foregroundColor(Color.white)
                             .padding(8)
-                            .background(Color.white)
+                            .background(Color.jetblack)
                             .cornerRadius(10)
                     })
                     .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
                     
-                    Text(!viewModel.isUpdateMode ? "เพิ่มประวัติลูกน้อย" : "แก้ไขประวัติลูกน้อย")
+                    Text(!viewModel.isUpdateMode ? "เพิ่มประวัติบุตร" : "แก้ไขประวัติบุตร")
                         .font(customFont(type: .bold, textStyle: .subheadline))
                     
                     Spacer()
@@ -305,14 +305,14 @@ struct KidHistoryView: View {
                         Image(systemName: "chevron.backward")
                             .font(.system(size: 16))
                             .frame(width: 24, height: 24)
-                            .foregroundColor(Color.jetblack)
+                            .foregroundColor(Color.white)
                             .padding(8)
-                            .background(Color.white)
+                            .background(Color.jetblack)
                             .cornerRadius(10)
                     })
                     .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
                     
-                    Text(!viewModel.isUpdateMode ? "เพิ่มประวัติลูกน้อย" : "แก้ไขประวัติลูกน้อย")
+                    Text(!viewModel.isUpdateMode ? "เพิ่มประวัติบุตร" : "แก้ไขประวัติบุตร")
                         .font(customFont(type: .bold, textStyle: .title2))
                     
                     if !motherViewModel.selectedPregnantId.isEmpty {

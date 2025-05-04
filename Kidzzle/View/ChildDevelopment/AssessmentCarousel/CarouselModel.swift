@@ -9,5 +9,8 @@ import SwiftUI
 
 struct Manual: Identifiable, Equatable {
     let id: Int
+    let title: String
+    let icon: String
     let imageURL: String
+    let linkURL: String
 }

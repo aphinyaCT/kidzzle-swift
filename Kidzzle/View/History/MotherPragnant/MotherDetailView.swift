@@ -23,9 +23,9 @@ struct MotherDetailView: View {
                 }) {
                     Image(systemName: "chevron.backward")
                         .font(.system(size: 20, weight: .medium))
-                        .foregroundColor(.jetblack)
+                        .foregroundColor(.white)
                         .frame(width: 36, height: 36)
-                        .background(Color.white)
+                        .background(Color.jetblack)
                         .cornerRadius(10)
                         .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
                 }

@@ -185,7 +185,7 @@ struct ShowKidHistoryView: View {
        .alert(isPresented: $showDeleteConfirmation) {
            Alert(
                title: Text("ยืนยันการลบ"),
-               message: Text("คุณแน่ใจหรือไม่ว่าต้องการลบประวัติของ \(selectedKid.kidName ?? "ลูกน้อย")?"),
+               message: Text("คุณแน่ใจหรือไม่ว่าต้องการลบประวัติของ \(selectedKid.kidName ?? "บุตร")?"),
                primaryButton: .destructive(Text("ลบ")) {
                    Task {
                        await deleteKidHistory()
@@ -234,14 +234,14 @@ struct ShowKidHistoryView: View {
                        Image(systemName: "chevron.backward")
                            .font(.system(size: 24))
                            .frame(width: 24, height: 24)
-                           .foregroundColor(Color.jetblack)
+                           .foregroundColor(Color.white)
                            .padding(8)
-                           .background(Color.white)
+                           .background(Color.jetblack)
                            .cornerRadius(10)
                            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
                    }
                    
-                   Text("ประวัติลูกน้อย")
+                   Text("ประวัติบุตร")
                        .font(customFont(type: .bold, textStyle: .headline))
                        .foregroundColor(Color.jetblack)
                        .transition(
@@ -272,16 +272,16 @@ struct ShowKidHistoryView: View {
                            Image(systemName: "chevron.backward")
                                .font(.system(size: 24))
                                .frame(width: 24, height: 24)
-                               .foregroundColor(Color.jetblack)
+                               .foregroundColor(Color.white)
                                .padding(8)
-                               .background(Color.white)
+                               .background(Color.jetblack)
                                .cornerRadius(10)
                                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
                        }
                        
                        Spacer()
                        
-                       Text("ประวัติลูกน้อย")
+                       Text("ประวัติบุตร")
                            .font(customFont(type: .bold, textStyle: .headline))
                        
                        Spacer()
