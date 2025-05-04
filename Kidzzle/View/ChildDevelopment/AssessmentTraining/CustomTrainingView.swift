@@ -57,13 +57,6 @@ struct CustomTrainingView: View {
                 .collapseProgress($progress)
                 .allowsHeaderGrowth()
                 .background(Color.ivorywhite)
-                .refreshable {
-                    Task {
-                        isLoading = true
-                        await viewModel.fetchDevelopmentTrainings(questionId: question.assessmentQuestionId)
-                        isLoading = false
-                    }
-                }
                 
                 smallHeader
             }

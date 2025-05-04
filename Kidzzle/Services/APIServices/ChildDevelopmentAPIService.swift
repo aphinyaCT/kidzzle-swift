@@ -103,12 +103,7 @@ class ChildDevelopmentAPIService {
                     return try decoder.decode([AgeRangeData].self, from: data)
                     
                 } catch {
-                    print("❌ Decode Error Details:")
-                    print("Error Type: \(type(of: error))")
-                    print("Error: \(error)")
-                    print("Error Description: \(error.localizedDescription)")
-                    
-                    throw APIError.serverError(message: "ไม่สามารถอ่านข้อมูลที่ได้รับจากเซิร์ฟเวอร์ได้")
+                    throw APIError.serverError(message: "ไม่สามารถอ่านข้อมูลที่ได้รับจากเซิร์ฟเวอร์ได้ (null)")
                 }
                 
             case 404:
@@ -163,18 +158,6 @@ class ChildDevelopmentAPIService {
                 let decoder = JSONDecoder()
                 
                 do {
-                    if let jsonArray = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] {
-                        print("📊 จำนวนข้อมูล JSON: \(jsonArray.count) รายการ")
-
-                        if let firstItem = jsonArray.first {
-                            print("🔍 ข้อมูล keys ในรายการแรก: \(Array(firstItem.keys))")
-
-                            if let ageRangeIdValue = firstItem["age_range_id"] as? String {
-                                print("👉 ค่า age_range_id ในข้อมูลแรก: \(ageRangeIdValue)")
-                            }
-                        }
-                    }
-                    
                     let result = try decoder.decode([AssessmentQuestionData].self, from: data)
                     print("✅ แปลงข้อมูลสำเร็จ \(result.count) รายการ")
                     return result
@@ -252,12 +235,7 @@ class ChildDevelopmentAPIService {
                     return result
                     
                 } catch {
-                    print("❌ Decode Error Details:")
-                    print("Error Type: \(type(of: error))")
-                    print("Error: \(error)")
-                    print("Error Description: \(error.localizedDescription)")
-
-                    throw APIError.serverError(message: "ไม่สามารถอ่านข้อมูลที่ได้รับจากเซิร์ฟเวอร์ได้")
+                    throw APIError.serverError(message: "ไม่สามารถอ่านข้อมูลที่ได้รับจากเซิร์ฟเวอร์ได้ (null)")
                 }
                 
             case 404:
@@ -318,12 +296,7 @@ class ChildDevelopmentAPIService {
                     return result
                     
                 } catch {
-                    print("❌ Decode Error Details:")
-                    print("Error Type: \(type(of: error))")
-                    print("Error: \(error)")
-                    print("Error Description: \(error.localizedDescription)")
-
-                    throw APIError.serverError(message: "ไม่สามารถอ่านข้อมูลที่ได้รับจากเซิร์ฟเวอร์ได้")
+                    throw APIError.serverError(message: "ไม่สามารถอ่านข้อมูลที่ได้รับจากเซิร์ฟเวอร์ได้ (null)")
                 }
                 
             case 404:

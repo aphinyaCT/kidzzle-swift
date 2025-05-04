@@ -104,29 +104,31 @@ struct CustomQuestionsListView: View {
                 .collapseProgress($progress)
                 .allowsHeaderGrowth()
                 .background(Color.ivorywhite)
-                .refreshable {
-                    Task {
-                        isLoading = true
-                        await viewModel.fetchAssessmentQuestions(ageRangeId: ageRange.ageRangeId)
-                        
-                        if let selectedAgeRange = viewModel.selectedAgeRange {
-                            await viewModel.fetchAssessmentResults(
-                                kidId: viewModel.selectedKidId,
-                                ageRangeId: selectedAgeRange.ageRangeId,
-                                assessmentTypeId: viewModel.selectedAssessmentType
-                            )
-                        }
-                        isLoading = false
-                    }
-                }
                 
                 smallHeader
             }
             .ignoresSafeArea()
             .frame(maxWidth: .infinity, alignment: .center)
+//            .onAppear {
+//                isLoading = true
+//                Task {
+//                    await viewModel.fetchAssessmentQuestionsIfNeeded(ageRangeId: ageRange.ageRangeId)
+//                    isLoading = false
+//                }
+//            }
             .onAppear {
                 isLoading = true
                 Task {
+                    await viewModel.fetchKidData()
+                    
+                    if let selectedAgeRange = viewModel.selectedAgeRange {
+                        await viewModel.fetchAssessmentResultsIfNeeded(
+                            kidId: viewModel.selectedKidId,
+                            ageRangeId: selectedAgeRange.ageRangeId,
+                            assessmentTypeId: viewModel.selectedAssessmentType
+                        )
+                    }
+                    
                     await viewModel.fetchAssessmentQuestionsIfNeeded(ageRangeId: ageRange.ageRangeId)
                     isLoading = false
                 }
@@ -462,18 +464,18 @@ struct QuestionExpandingCard: View {
         .background(Color(UIColor.systemBackground))
         .cornerRadius(10)
         .shadow(color: isExpanded ? Color.black.opacity(0.1) : .clear, radius: 4, x: 0, y: 2)
-        .onAppear {
-            Task {
-                await viewModel.fetchKidData()
-                
-                if let selectedAgeRange = viewModel.selectedAgeRange {
-                    await viewModel.fetchAssessmentResultsIfNeeded(
-                        kidId: viewModel.selectedKidId,
-                        ageRangeId: selectedAgeRange.ageRangeId,
-                        assessmentTypeId: viewModel.selectedAssessmentType
-                    )
-                }
-            }
-        }
+//        .onAppear {
+//            Task {
+//                await viewModel.fetchKidData()
+//                
+//                if let selectedAgeRange = viewModel.selectedAgeRange {
+//                    await viewModel.fetchAssessmentResultsIfNeeded(
+//                        kidId: viewModel.selectedKidId,
+//                        ageRangeId: selectedAgeRange.ageRangeId,
+//                        assessmentTypeId: viewModel.selectedAssessmentType
+//                    )
+//                }
+//            }
+//        }
     }
 }

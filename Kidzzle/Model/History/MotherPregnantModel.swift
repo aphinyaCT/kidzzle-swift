@@ -50,6 +50,19 @@ struct MotherPregnantData: Codable, Identifiable {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
     }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decode(String.self, forKey: .id)
+        motherBirthday = try container.decodeIfPresent(String.self, forKey: .motherBirthday)
+        motherName = try container.decodeIfPresent(String.self, forKey: .motherName)
+        pregnantComplications = try container.decodeIfPresent(String.self, forKey: .pregnantComplications)
+        pregnantCongenitalDisease = try container.decodeIfPresent(String.self, forKey: .pregnantCongenitalDisease)
+        pregnantDrugHistory = try container.decodeIfPresent(String.self, forKey: .pregnantDrugHistory)
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
+        updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
+    }
 }
 
 struct UpdateMotherPregnantRequest: Codable {

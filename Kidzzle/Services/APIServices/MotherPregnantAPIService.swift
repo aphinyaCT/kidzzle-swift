@@ -42,8 +42,6 @@ class MotherPregnantAPIService {
             print("✅ Response Status Code: \(httpResponse.statusCode)")
             
             if let responseString = String(data: data, encoding: .utf8) {
-                print("✅ Response Body: \(responseString)")
-                
                 if responseString == "null" {
                     print("ℹ️ Server returned null - empty response")
                     return CreateMotherPregnantResponse(code: httpResponse.statusCode, message: "สร้างข้อมูลสำเร็จ")
@@ -109,8 +107,6 @@ class MotherPregnantAPIService {
             print("✅ Response Status Code: \(httpResponse.statusCode)")
             
             if let responseString = String(data: data, encoding: .utf8) {
-                print("✅ Response Body: \(responseString)")
-
                 if responseString == "null" {
                     print("ℹ️ Server returned null - no mother pregnant data found")
                     return []
@@ -122,19 +118,11 @@ class MotherPregnantAPIService {
                 let decoder = JSONDecoder()
                 
                 do {
-                    if let jsonString = String(data: data, encoding: .utf8) {
-                        print("🔍 Raw JSON for decoding: \(jsonString)")
-                    }
-
+                    
                     return try decoder.decode([MotherPregnantData].self, from: data)
                     
                 } catch {
-                    print("❌ Decode Error Details:")
-                    print("Error Type: \(type(of: error))")
-                    print("Error: \(error)")
-                    print("Error Description: \(error.localizedDescription)")
-                    
-                    throw APIError.serverError(message: "ไม่สามารถอ่านข้อมูลที่ได้รับจากเซิร์ฟเวอร์ได้")
+                    throw APIError.serverError(message: "ไม่สามารถอ่านข้อมูลที่ได้รับจากเซิร์ฟเวอร์ได้ (null)")
                 }
                 
             case 404:

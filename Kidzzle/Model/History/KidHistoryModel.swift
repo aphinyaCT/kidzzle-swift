@@ -65,6 +65,24 @@ struct KidHistoryData: Codable, Identifiable {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
     }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decode(String.self, forKey: .id)
+        kidName = try container.decodeIfPresent(String.self, forKey: .kidName)
+        kidBirthday = try container.decodeIfPresent(String.self, forKey: .kidBirthday)
+        kidGender = try container.decodeIfPresent(String.self, forKey: .kidGender)
+        kidBirthWeight = try container.decodeIfPresent(String.self, forKey: .kidBirthWeight)
+        kidBodyLength = try container.decodeIfPresent(String.self, forKey: .kidBodyLength)
+        kidBloodType = try container.decodeIfPresent(String.self, forKey: .kidBloodType)
+        kidCongenitalDisease = try container.decodeIfPresent(String.self, forKey: .kidCongenitalDisease)
+        kidOxygen = try container.decodeIfPresent(String.self, forKey: .kidOxygen)
+        kidGestationalAge = try container.decodeIfPresent(String.self, forKey: .kidGestationalAge)
+        pregnantId = try container.decodeIfPresent(String.self, forKey: .pregnantId)
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
+        updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
+    }
 }
 
 struct UpdateKidHistoryRequest: Codable {

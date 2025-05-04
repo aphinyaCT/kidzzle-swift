@@ -235,20 +235,12 @@ class AuthAPIService {
                 let decoder = JSONDecoder()
                 
                 do {
-                    if let jsonString = String(data: data, encoding: .utf8) {
-                        print("🔍 Raw JSON for decoding: \(jsonString)")
-                    }
                     
                     let authResponse = try decoder.decode(AuthResponse.self, from: data)
                     print("✅ Successfully decoded AuthResponse")
                     return authResponse
                     
                 } catch {
-                    print("❌ Decode Error Details:")
-                    print("Error Type: \(type(of: error))")
-                    print("Error: \(error)")
-                    print("Error Description: \(error.localizedDescription)")
-                    
                     throw APIError.decodingError
                 }
                 

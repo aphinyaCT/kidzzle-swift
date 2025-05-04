@@ -22,6 +22,7 @@ class MotherPregnantViewModel: ObservableObject {
     @Published var pregnantCongenitalDisease: String = ""
     @Published var pregnantDrugHistory: String = ""
     @Published var isUpdateMode = false
+    @Published var isLoadingMotherData = false
     
     // Data Storage
     @Published var motherPregnantDataList: [MotherPregnantData] = [] {
@@ -121,11 +122,66 @@ class MotherPregnantViewModel: ObservableObject {
     }
     
     // MARK: - API Methods
+//    @MainActor
+//    func fetchMotherPregnant(forceRefresh: Bool = false) async {
+//        
+//        if isLoading {
+//            print("⚠️ Already loading, skipping fetch")
+//            return
+//        }
+//        
+//        if !forceRefresh && !motherPregnantDataList.isEmpty {
+//            print("✅ Using cached mother pregnant data, \(motherPregnantDataList.count) records")
+//            return
+//        }
+//        
+//        print("🔍 Fetching mother pregnant data")
+//        
+//        let accessToken = authViewModel.accessToken
+//        
+//        guard !accessToken.isEmpty else {
+//            error = APIError.serverError(message: "ไม่พบ Access Token")
+//            print("❌ Missing access token")
+//            return
+//        }
+//        
+//        isLoading = true
+//        error = nil
+//        
+//        do {
+//            let response = try await apiService.getMotherPregnant(accessToken: accessToken)
+//            
+//            withAnimation {
+//                self.motherPregnantDataList = response
+//                self.isLoading = false
+//            }
+//            
+//            print("✅ Successfully fetched mother pregnant data: \(response.count) records")
+//        } catch let error as APIError {
+//            withAnimation {
+//                self.error = error
+//                self.isLoading = false
+//                
+//                if case .serverError(let message) = error, message.contains("ไม่พบข้อมูล") {
+//                    self.motherPregnantDataList = []
+//                    print("ℹ️ No mother pregnant data found")
+//                }
+//            }
+//            print("❌ Error fetching mother pregnant data: \(error.localizedDescription)")
+//        } catch {
+//            withAnimation {
+//                self.error = APIError.networkError
+//                self.isLoading = false
+//            }
+//            print("❌ Unknown error: \(error.localizedDescription)")
+//        }
+//    }
+    
     @MainActor
     func fetchMotherPregnant(forceRefresh: Bool = false) async {
         
-        if isLoading {
-            print("⚠️ Already loading, skipping fetch")
+        if isLoadingMotherData {
+            print("⚠️ กำลังโหลดข้อมูลมารดาอยู่แล้ว จึงข้ามการโหลดซ้ำ")
             return
         }
         
@@ -134,6 +190,7 @@ class MotherPregnantViewModel: ObservableObject {
             return
         }
         
+        isLoadingMotherData = true
         print("🔍 Fetching mother pregnant data")
         
         let accessToken = authViewModel.accessToken
@@ -141,6 +198,7 @@ class MotherPregnantViewModel: ObservableObject {
         guard !accessToken.isEmpty else {
             error = APIError.serverError(message: "ไม่พบ Access Token")
             print("❌ Missing access token")
+            isLoadingMotherData = false
             return
         }
         
@@ -174,6 +232,8 @@ class MotherPregnantViewModel: ObservableObject {
             }
             print("❌ Unknown error: \(error.localizedDescription)")
         }
+        
+        isLoadingMotherData = false
     }
     
     @MainActor

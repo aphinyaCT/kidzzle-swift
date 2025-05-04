@@ -72,8 +72,11 @@ struct MainTabView: View {
         VStack(spacing: 0) {
             switch selectedTab {
             case 0:
-                HistoryView()
-                    .environmentObject(authViewModel)
+                HistoryView(
+                    kidViewModel: kidViewModel,
+                    motherViewModel: motherViewModel
+                )
+                .environmentObject(authViewModel)
             case 1:
                 ChildDevelopmentMainView(
                     authViewModel: authViewModel,

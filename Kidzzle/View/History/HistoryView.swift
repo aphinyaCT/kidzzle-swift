@@ -11,8 +11,8 @@ import ScalingHeaderScrollView
 struct HistoryView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
-    @StateObject private var kidViewModel: KidHistoryViewModel
-    @StateObject private var motherViewModel: MotherPregnantViewModel
+    @ObservedObject var kidViewModel: KidHistoryViewModel
+    @ObservedObject var motherViewModel: MotherPregnantViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var progress: CGFloat = 0
     @State private var showAddKidView: Bool = false
@@ -22,15 +22,6 @@ struct HistoryView: View {
     private let minHeight = 100.0
     private let maxHeight = 230.0
 
-    init() {
-        let authVM = AuthViewModel()
-        _kidViewModel = StateObject(wrappedValue: KidHistoryViewModel(
-            authViewModel: authVM,
-            motherViewModel: MotherPregnantViewModel(authViewModel: authVM)
-        ))
-        _motherViewModel = StateObject(wrappedValue: MotherPregnantViewModel(authViewModel: authVM))
-    }
-    
     var body: some View {
         GeometryReader { geometry in
             let columns = adaptiveColumns(for: geometry.size.width)
@@ -221,6 +212,13 @@ struct HistoryView: View {
 }
 
 #Preview {
-    HistoryView()
-        .environmentObject(AuthViewModel())
+    let authVM = AuthViewModel()
+    let motherVM = MotherPregnantViewModel(authViewModel: authVM)
+    let kidVM = KidHistoryViewModel(
+        authViewModel: authVM,
+        motherViewModel: motherVM
+    )
+    
+    return HistoryView(kidViewModel: kidVM, motherViewModel: motherVM)
+        .environmentObject(authVM)
 }

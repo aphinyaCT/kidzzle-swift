@@ -42,8 +42,6 @@ class KidHistoryAPIService {
             print("✅ Response Status Code: \(httpResponse.statusCode)")
             
             if let responseString = String(data: data, encoding: .utf8) {
-                print("✅ Response Body: \(responseString)")
-                
                 if responseString == "null" {
                     print("ℹ️ Server returned null - empty response")
                     return CreateKidHistoryResponse(code: httpResponse.statusCode, message: "สร้างข้อมูลสำเร็จ")
@@ -108,8 +106,6 @@ class KidHistoryAPIService {
             
             print("✅ Response Status Code: \(httpResponse.statusCode)")
             if let responseString = String(data: data, encoding: .utf8) {
-                print("✅ Response Body: \(responseString)")
-                
                 if responseString == "null" {
                     print("ℹ️ Server returned null - no kid history data found")
                     return []
@@ -119,10 +115,7 @@ class KidHistoryAPIService {
             switch httpResponse.statusCode {
             case 200...299:
                 let decoder = JSONDecoder()
-                if let jsonString = String(data: data, encoding: .utf8) {
-                    print("🔍 Raw JSON for decoding: \(jsonString)")
-                }
-
+                
                 if let kidHistoryArray = try? decoder.decode([KidHistoryData].self, from: data) {
                     print("✅ Successfully decoded as Array")
                     return kidHistoryArray

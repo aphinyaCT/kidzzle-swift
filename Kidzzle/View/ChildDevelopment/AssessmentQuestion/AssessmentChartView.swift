@@ -38,11 +38,6 @@ struct AssessmentChartView: View {
             }
         }
         .padding(.bottom, 40)
-        .refreshable {
-            Task {
-                await loadData()
-            }
-        }
         .onAppear {
             Task {
                 await loadData()
@@ -130,12 +125,12 @@ struct AssessmentChartView: View {
                         }
                     }
                     .frame(
-                        width: max(UIScreen.main.bounds.width, CGFloat(questionResults.count) * 100),
-                        height: 300
+                        width: min(max(UIScreen.main.bounds.width, CGFloat(questionResults.count) * 80), UIScreen.main.bounds.width * 1.5),
+                        height: 200
                     )
                     .padding()
                 }
-                .frame(height: 300)
+                .frame(height: 200)
                 
                 VStack(alignment: .leading, spacing: 8) {
                     
@@ -184,6 +179,7 @@ struct AssessmentChartView: View {
                                 }
                             }
                         }
+                        .frame(maxHeight: 200)
                     }
                 }
                 
@@ -323,8 +319,19 @@ struct AssessmentChartView: View {
         )
         
         if !viewModel.assessmentResults.isEmpty {
-            let firstResult = getFilteredResults().first
-            selectedQuestionId = firstResult?.assessmentQuestionId
+            
+            let filteredResults = getFilteredResults()
+
+            let gmResults = filteredResults.filter {
+                let type = getDevelopmentType(for: $0.assessmentQuestionId)
+                return type == "GM"
+            }
+            
+            if !gmResults.isEmpty {
+                selectedQuestionId = gmResults.first?.assessmentQuestionId
+            } else {
+                selectedQuestionId = filteredResults.first?.assessmentQuestionId
+            }
         }
         
         isLoading = false
