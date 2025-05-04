@@ -82,6 +82,10 @@ struct AssessmentChartView: View {
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
                     Chart {
+                        RuleMark(y: .value("ผ่าน", 0.5))
+                            .foregroundStyle(.gray.opacity(0.3))
+                            .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 5]))
+
                         ForEach(questionResults.sorted { $0.createdAt < $1.createdAt }) { result in
                             LineMark(
                                 x: .value("วันที่", result.createdAt),
@@ -89,48 +93,41 @@ struct AssessmentChartView: View {
                             )
                             .foregroundStyle(getDomainColor(for: questionId))
                             .lineStyle(StrokeStyle(lineWidth: 2))
-                            
+                        }
+
+                        ForEach(questionResults.sorted { $0.createdAt < $1.createdAt }) { result in
                             PointMark(
                                 x: .value("วันที่", result.createdAt),
                                 y: .value("ผลการประเมิน", result.isPassed ? 1 : 0)
                             )
                             .foregroundStyle(result.isPassed ? Color.green : Color.red)
-                            .symbolSize(100)
+                            .symbolSize(60)
+                            .annotation(position: result.isPassed ? .bottom : .top) {
+                                Text(formatShortDate(result.createdAt))
+                                    .font(customFont(type: .regular, textStyle: .caption2))
+                                    .foregroundColor(.gray)
+                                    .padding(.vertical, 2)
+                                    .background(Color.white.opacity(0.8))
+                                    .cornerRadius(4)
+                            }
                         }
-                        
-                        RuleMark(y: .value("ผ่าน", 0.5))
-                            .foregroundStyle(.gray.opacity(0.5))
-                            .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 5]))
                     }
                     .chartYScale(domain: 0...1)
                     .chartYAxis {
                         AxisMarks(values: [0, 1]) { value in
                             AxisValueLabel {
                                 Text(value.index == 0 ? "ไม่ผ่าน" : "ผ่าน")
-                                    .font(customFont(type: .regular, textStyle: .body))
+                                    .font(customFont(type: .regular, textStyle: .caption1))
                                     .foregroundColor(value.index == 0 ? .red : .green)
                             }
                         }
                     }
-                    .chartXAxis {
-                        let dates = questionResults.map { $0.createdAt }.sorted()
-                        AxisMarks(values: dates) { value in
-                            if let date = value.as(Date.self) {
-                                AxisValueLabel {
-                                    Text(formatShortDate(date))
-                                        .font(customFont(type: .regular, textStyle: .caption1))
-                                }
-                                .offset(y: 5)
-                            }
-                        }
-                    }
-                    .frame(
-                        width: min(max(UIScreen.main.bounds.width, CGFloat(questionResults.count) * 80), UIScreen.main.bounds.width * 1.5),
-                        height: 200
-                    )
-                    .padding()
+                    .chartXAxis(.hidden)
+                    .frame(width: UIScreen.main.bounds.width - 40, height: 220)
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 4)
                 }
-                .frame(height: 200)
+                .frame(height: 220)
                 
                 VStack(alignment: .leading, spacing: 8) {
                     
