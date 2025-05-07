@@ -366,7 +366,7 @@ struct AssessmentTypeCard: View {
                 image: "https://res.cloudinary.com/dw7lzqrbz/image/upload/v1744735956/KIDZZLE-DAIM_p2uz3b.png",
                 title: "ประเมิน DAIM",
                 subtitle: "สำหรับเด็กกลุ่มเสี่ยง",
-                bgColor: Color.sunYellow
+                bgColor: Color.greenMint
             ) {
                 onAssessmentSelected(kid.id, "ASSMTT_2")
             }
