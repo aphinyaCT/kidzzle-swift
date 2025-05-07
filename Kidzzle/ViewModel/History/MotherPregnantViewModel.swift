@@ -53,6 +53,28 @@ class MotherPregnantViewModel: ObservableObject {
          authViewModel: AuthViewModel) {
         self.apiService = apiService
         self.authViewModel = authViewModel
+        
+        NotificationCenter.default.addObserver(self,
+                                              selector: #selector(handleUserLogout),
+                                              name: .userLoggedOut,
+                                              object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func handleUserLogout() {
+        motherPregnantDataList = []
+        selectedPregnantId = ""
+        motherName = ""
+        motherBirthday = Date()
+        pregnantComplications = ""
+        pregnantCongenitalDisease = ""
+        pregnantDrugHistory = ""
+        isUpdateMode = false
+
+        objectWillChange.send()
     }
     
     // MARK: - API Methods

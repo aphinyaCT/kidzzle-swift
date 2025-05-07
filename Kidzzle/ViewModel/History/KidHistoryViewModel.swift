@@ -43,8 +43,35 @@ class KidHistoryViewModel: ObservableObject {
         self.apiService = apiService
         self.authViewModel = authViewModel
         self.motherViewModel = motherViewModel
+        
+        NotificationCenter.default.addObserver(self,
+                                                selector: #selector(handleUserLogout),
+                                                name: .userLoggedOut,
+                                                object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
+    @objc private func handleUserLogout() {
+        kidHistoryDataDict = [:]
+        kidName = ""
+        kidBirthday = Date()
+        kidGender = ""
+        kidBirthWeight = ""
+        kidBodyLength = ""
+        kidBloodType = ""
+        kidCongenitalDisease = ""
+        kidOxygen = ""
+        kidGestationalAge = ""
+        pregnantId = ""
+        isUpdateMode = false
+        currentKidId = nil
+
+        objectWillChange.send()
+    }
+    
     // MARK: - API Methods
     @MainActor
     func createKidHistory(

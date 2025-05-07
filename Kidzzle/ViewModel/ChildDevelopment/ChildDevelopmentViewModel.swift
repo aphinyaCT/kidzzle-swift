@@ -74,6 +74,30 @@ class ChildDevelopmentViewModel: ObservableObject {
         self.authViewModel = authViewModel
         self.kidViewModel = kidViewModel
         self.motherViewModel = motherViewModel
+        
+        NotificationCenter.default.addObserver(self,
+                                             selector: #selector(handleUserLogout),
+                                             name: .userLoggedOut,
+                                             object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func handleUserLogout() {
+        ageRanges = []
+        assessmentQuestions = []
+        developmentTrainings = []
+        assessmentResults = []
+        selectedAssessmentType = "ASSMTT_1"
+        selectedAgeRange = nil
+        selectedQuestion = nil
+        selectedKidId = ""
+        selectedKidData = nil
+        lastFetchTimeMap = [:]
+        
+        objectWillChange.send()
     }
     
     // MARK: - Initial Data Loading

@@ -49,7 +49,7 @@ class AuthViewModel: ObservableObject {
     
     // Validation Toasts
     @Published var showInvalidCredentialsToast = false
-    
+
     // MARK: - Initialization
     init() {
         loadSavedUserData()
@@ -343,6 +343,8 @@ class AuthViewModel: ObservableObject {
         userEmail = nil
         userPhoto = nil
         
+        NotificationCenter.default.post(name: .userLoggedOut, object: nil)
+        
         self.showLogoutSuccessToast = true
     }
     
@@ -622,4 +624,8 @@ extension UIApplication {
         
         return root
     }
+}
+
+extension NSNotification.Name {
+    static let userLoggedOut = NSNotification.Name("userLoggedOut")
 }
