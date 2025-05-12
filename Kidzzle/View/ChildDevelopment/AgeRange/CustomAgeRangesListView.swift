@@ -38,7 +38,7 @@ struct CustomAgeRangesListView: View {
     @State var progress: CGFloat = 0
     
     private let minHeight = 100.0
-    private let maxHeight = UIScreen.main.bounds.width > 700 ? 250.0 : 300.0
+    private let maxHeight = UIScreen.main.bounds.width > 700 ? 250.0 : 350.0
     
     var body: some View {
         GeometryReader { geometry in
@@ -149,7 +149,7 @@ struct CustomAgeRangesListView: View {
                             .background(Color.white)
                             .clipShape(Circle())
                         
-                        Text("การประเมินนี้อ้างอิงจากคู่มือ (\(selectedAssessmentType == "ASSMTT_1" ? "DSPM" : "DAIM")) พัฒนาการเด็กแต่ละคนอาจแตกต่างกัน หากมีข้อกังวลหรือพบว่ามีความล่าช้าควรปรึกษาผู้เชี่ยวชาญ")
+                        Text("การประเมินนี้อ้างอิงจากคู่มือ \(selectedAssessmentType == "ASSMTT_1" ? "DSPM" : "DAIM") โดยได้รับอนุญาตจากสำนักส่งเสริมสุขภาพ กรมอนามัย กระทรวงสาธารณสุข เมื่อวันที่ 4 กุมภาพันธ์ 2568 พัฒนาการเด็กแต่ละคนอาจแตกต่างกัน หากมีข้อกังวลหรือพบว่ามีความล่าช้าควรปรึกษาผู้เชี่ยวชาญ")
                             .font(customFont(type: .regular, textStyle: .footnote))
                             .foregroundColor(.jetblack)
                             .fixedSize(horizontal: false, vertical: true)
